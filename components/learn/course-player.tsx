@@ -17,6 +17,10 @@ import { BioLab } from "@/components/labs/bio-lab"
 import { GamePhysicsLab } from "@/components/labs/game-physics-lab"
 import { FeaSimulator } from "@/components/labs/fea-simulator"
 import { GdtLab } from "@/components/labs/gdt-lab"
+import { BimClashLab } from "@/components/labs/bim-clash-lab"
+import { BridgeBuilderLab } from "@/components/labs/bridge-builder-lab"
+import { FailurePredictionLab } from "@/components/labs/failure-prediction-lab"
+import { SmartMaintenanceLab } from "@/components/labs/smart-maintenance-lab"
 
 interface Lesson {
   id: string
@@ -142,6 +146,10 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
                  {lesson.content === "game-physics-lab" && <GamePhysicsLab />}
                  {lesson.content === "fea-simulator" && <FeaSimulator />}
                  {lesson.content === "gdt-lab" && <GdtLab />}
+                 {lesson.content === "bim-clash-lab" && <BimClashLab />}
+                 {lesson.content === "bridge-builder-lab" && <BridgeBuilderLab />}
+                 {lesson.content === "failure-prediction-lab" && <FailurePredictionLab />}
+                 {lesson.content === "smart-maintenance-lab" && <SmartMaintenanceLab />}
                  
                  {lesson.content !== "reverse-string-challenge" && 
                   lesson.content !== "bubble-sort" && 
@@ -152,7 +160,11 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
                   lesson.content !== "bio-lab" &&
                   lesson.content !== "game-physics-lab" &&
                   lesson.content !== "fea-simulator" &&
-                  lesson.content !== "gdt-lab" && (
+                  lesson.content !== "gdt-lab" &&
+                  lesson.content !== "bim-clash-lab" &&
+                  lesson.content !== "bridge-builder-lab" && 
+                  lesson.content !== "failure-prediction-lab" &&
+                  lesson.content !== "smart-maintenance-lab" && (
                    <p className="text-center text-slate-500 py-10">Visualizer not found: {lesson.content}</p>
                  )}
               </div>

@@ -62,6 +62,15 @@ const TRACK_DATA: Record<string, {
     ],
     theme: "from-stone-400 to-zinc-600",
   },
+  industrial: {
+    title: "Industrial IoT & Reliability 🔧",
+    description: "Build robust infrastructure using predictive smart data and forensic LLM analysis.",
+    courses: [
+      { id: "predictive-maintenance", title: "Smart Machine Diary", desc: "Use LLMs to auto-generate predictive alerts from IoT sensor data.", icon: "📡", locked: false },
+      { id: "forensic-analysis", title: "AI Failure Storyteller", desc: "Forensic failure prediction on mechanics using telemetric data.", icon: "🔍", locked: false },
+    ],
+    theme: "from-cyan-500 to-blue-600",
+  },
   electrical: {
     title: "Electrical & ECE ⚡",
     description: "Design circuits, digital logic, and signal processing systems.",

@@ -68,6 +68,17 @@ export default function Home() {
       tag: "Infrastructure",
     },
     {
+      id: "industrial",
+      title: "Industrial IoT",
+      description: "Perform forensic logic analysis and smart machine predictive maintenance.",
+      icon: <Cpu className="w-8 h-8 text-cyan-500" />,
+      color: "from-cyan-500/20 to-blue-600/20",
+      border: "hover:border-cyan-500/50",
+      stats: "Smart Sensors • Maintenance LLM",
+      href: "/learn/industrial",
+      tag: "Hardware",
+    },
+    {
       id: "electrical",
       title: "Electrical & ECE",
       description: "Design circuits, digital logic, and signal processing systems.",

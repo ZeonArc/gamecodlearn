@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Building2, CheckCircle, AlertOctagon, Info } from "lucide-react"
+import { cn } from "@/lib/utils"
 
 export function BimClashLab() {
   const [elevation, setElevation] = useState<number>(10) // Z-axis elevation of HVAC duct

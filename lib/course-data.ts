@@ -275,4 +275,16 @@ export const ALL_COURSES: CourseData[] = [
       { id: "l2", title: "Lab: Tune Physics Engine", type: "visualizer", content: "game-physics-lab" }
     ]}
   ]},
+  { id: "predictive-maintenance", title: "Smart Machine Diary 📡", modules: [
+    { id: "m1", title: "Module 1: IoT Telemetry", lessons: [
+      { id: "l1", title: "The Industrial Internet of Things", type: "text", content: "# Industrial IoT\n\nModern machinery produces gigabytes of data every minute. By piping sensor data (Temperature, RPM, Vibration) into an AI pipeline, we switch from *Reactive* Maintenance (fixing it when it breaks) to *Predictive* Maintenance (fixing it before it breaks)." },
+      { id: "l2", title: "Lab: AI Auto-Logger", type: "visualizer", content: "smart-maintenance-lab" }
+    ]}
+  ]},
+  { id: "forensic-analysis", title: "AI Failure Storyteller 🔍", modules: [
+    { id: "m1", title: "Module 1: Forensic Engineering", lessons: [
+      { id: "l1", title: "Why Things Break", type: "text", content: "# Forensic Engineering\n\nWhen a structural or mechanical component fails, we must understand *why* so it never happens again.\n\nWas it **Thermal Creep** from excessive heat? Was it **Fatigue Failure** from millions of stress cycles causing micro-cracks? Our AI Forensic tool helps diagnose the exact mechanism." },
+      { id: "l2", title: "Lab: Generate Failure Story", type: "visualizer", content: "failure-prediction-lab" }
+    ]}
+  ]},
 ]
