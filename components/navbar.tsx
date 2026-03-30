@@ -80,12 +80,31 @@ export function Navbar() {
             >
               Jobs
             </Link>
-            <Link
-              href="/chat"
-              className="transition-colors hover:text-primary text-foreground/80"
-            >
-              AI Mentor
-            </Link>
+            <DropdownMenu>
+              <DropdownMenuTrigger className="transition-colors hover:text-primary text-foreground/80 flex items-center gap-1 outline-none">
+                AI Mentor
+                <ArrowDown className="h-3 w-3 opacity-50" />
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="start" className="w-48">
+                <DropdownMenuLabel>AI Tools</DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem asChild>
+                  <Link href="/chat" className="flex items-center gap-2 cursor-pointer">
+                    <span>💬</span> AI Chat
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/mentor/interview" className="flex items-center gap-2 cursor-pointer">
+                    <span>🧠</span> Mock Interview
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/mentor/resume" className="flex items-center gap-2 cursor-pointer">
+                    <span>📄</span> Smart Resume
+                  </Link>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">

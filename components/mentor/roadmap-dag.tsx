@@ -8,18 +8,22 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { Button } from "@/components/ui/button"
 
-export type NodeType = "course" | "certification" | "project" | "internship"
+export type NodeType = "course" | "certification" | "project" | "internship" | "goal"
 
 export interface RoadmapNode {
   id: string;
   type: NodeType;
+  label?: string;
   title: string;
   description: string;
   status: "locked" | "available" | "in-progress" | "completed";
   xp_reward: number;
   depends_on: string[]; // IDs of prerequisite nodes
+  dependencies?: string[]; // Alias for depends_on (AI generates both)
   link?: string;
   column: number; // For layout (0 = start, 1 = mid, 2 = advanced, etc)
+  completed_at?: string;
+  courseraQuery?: string;
 }
 
 interface DAGProps {
@@ -58,6 +62,8 @@ export function RoadmapDAG({ nodes, onNodeComplete, isLoading }: DAGProps) {
       case 'certification': return <Award className="w-5 h-5" />
       case 'project': return <Zap className="w-5 h-5" />
       case 'internship': return <Briefcase className="w-5 h-5" />
+      case 'goal': return <Award className="w-5 h-5" />
+      default: return <Zap className="w-5 h-5" />
     }
   }
 
