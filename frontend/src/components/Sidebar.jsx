@@ -17,12 +17,12 @@ export default function Sidebar({ currentUser, onSwitchRole }) {
   const isTeacher = currentUser?.role === 'TEACHER';
 
   return (
-    <aside className="fixed left-0 top-0 h-screen w-64 bg-slate-900/80 backdrop-blur-xl border-r border-white/5 flex flex-col z-50">
+    <aside className="fixed left-0 top-0 h-screen w-64 bg-white/80 backdrop-blur-xl border-r border-slate-200 flex flex-col z-50 shadow-sm">
       {/* Logo */}
-      <div className="p-6 border-b border-white/5">
+      <div className="p-6 border-b border-slate-200">
         <h1 className="text-xl font-bold">
           <span className="gradient-text">Career</span>
-          <span className="text-white">Mentor</span>
+          <span className="text-slate-900">Mentor</span>
         </h1>
         <p className="text-xs text-slate-500 mt-1">AI-Powered Learning Platform</p>
       </div>
@@ -42,9 +42,9 @@ export default function Sidebar({ currentUser, onSwitchRole }) {
           </NavLink>
         ))}
 
-        <div className="h-px bg-white/5 my-4" />
+        <div className="h-px bg-slate-200 my-4" />
 
-        <p className="text-[11px] font-bold text-slate-600 uppercase tracking-widest px-4 mb-2">Teacher</p>
+        <p className="text-[11px] font-bold text-slate-400 uppercase tracking-widest px-4 mb-2">Teacher</p>
         {NAV_ITEMS_TEACHER.map(item => (
           <NavLink
             key={item.to}
@@ -59,19 +59,19 @@ export default function Sidebar({ currentUser, onSwitchRole }) {
       </nav>
 
       {/* User Card */}
-      <div className="p-4 border-t border-white/5">
+      <div className="p-4 border-t border-slate-200">
         <div className="glass-card p-3 flex items-center gap-3">
           <div className="w-9 h-9 rounded-full bg-gradient-to-br from-blue-500 to-violet-500 flex items-center justify-center text-sm font-bold text-white shrink-0">
             {currentUser?.name?.charAt(0) || 'U'}
           </div>
           <div className="min-w-0">
-            <p className="text-sm font-semibold text-white truncate">{currentUser?.name || 'Guest'}</p>
+            <p className="text-sm font-semibold text-slate-900 truncate">{currentUser?.name || 'Guest'}</p>
             <p className="text-[11px] text-slate-500">{isTeacher ? 'Teacher' : 'Student'}</p>
           </div>
         </div>
         <button
           onClick={onSwitchRole}
-          className="w-full mt-2 text-xs text-slate-500 hover:text-slate-300 transition py-1.5 rounded-lg hover:bg-white/5"
+          className="w-full mt-2 text-xs text-slate-500 hover:text-slate-800 transition py-1.5 rounded-lg hover:bg-slate-100"
         >
           Switch to {isTeacher ? 'Student' : 'Teacher'} View
         </button>

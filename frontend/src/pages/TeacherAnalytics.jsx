@@ -38,31 +38,31 @@ export default function TeacherAnalytics() {
 
   return (
     <div className="fade-in">
-      <h1 className="text-3xl font-bold text-white mb-2">Class Analytics</h1>
-      <p className="text-slate-400 mb-8">Aggregate performance metrics, skill distribution, and student insights.</p>
+      <h1 className="text-3xl font-bold text-slate-900 mb-2">Class Analytics</h1>
+      <p className="text-slate-600 mb-8">Aggregate performance metrics, skill distribution, and student insights.</p>
 
-      {error && <div className="glass-card p-4 mb-6 border-red-500/30 bg-red-500/5"><p className="text-red-400 text-sm">{error}</p></div>}
+      {error && <div className="glass-card p-4 mb-6 border-red-200 bg-red-50"><p className="text-red-600 text-sm">{error}</p></div>}
 
       {/* Top Metrics */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <div className="stat-card">
           <span className="text-2xl">👥</span>
-          <p className="text-3xl font-bold text-white">{analytics.totalStudents}</p>
+          <p className="text-3xl font-bold text-slate-900">{analytics.totalStudents}</p>
           <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Total Students</p>
         </div>
         <div className="stat-card">
           <span className="text-2xl">📝</span>
-          <p className="text-3xl font-bold text-blue-400">{analytics.totalInterviews}</p>
+          <p className="text-3xl font-bold text-blue-600">{analytics.totalInterviews}</p>
           <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Total Interviews</p>
         </div>
         <div className="stat-card">
           <span className="text-2xl">⭐</span>
-          <p className="text-3xl font-bold text-amber-400">{analytics.averageClassScore}/10</p>
+          <p className="text-3xl font-bold text-amber-500">{analytics.averageClassScore}/10</p>
           <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">Average Score</p>
         </div>
         <div className="stat-card">
           <span className="text-2xl">⚠️</span>
-          <p className="text-3xl font-bold text-red-400">{analytics.weakStudents?.length || 0}</p>
+          <p className="text-3xl font-bold text-red-600">{analytics.weakStudents?.length || 0}</p>
           <p className="text-xs text-slate-500 font-medium uppercase tracking-wider">At-Risk Students</p>
         </div>
       </div>
@@ -70,12 +70,12 @@ export default function TeacherAnalytics() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
         {/* Skill Distribution */}
         <div className="glass-card p-6">
-          <h2 className="text-lg font-bold text-white mb-4">Skill Distribution</h2>
+          <h2 className="text-lg font-bold text-slate-900 mb-4">Skill Distribution</h2>
           <div className="space-y-3">
             {skillEntries.map(([skill, count]) => (
               <div key={skill}>
                 <div className="flex items-center justify-between text-sm mb-1">
-                  <span className="text-slate-300 font-medium">{skill}</span>
+                  <span className="text-slate-700 font-medium">{skill}</span>
                   <span className="text-slate-500">{count} student{count !== 1 ? 's' : ''}</span>
                 </div>
                 <div className="progress-bar">
@@ -92,14 +92,14 @@ export default function TeacherAnalytics() {
 
         {/* Role Distribution */}
         <div className="glass-card p-6">
-          <h2 className="text-lg font-bold text-white mb-4">Target Role Distribution</h2>
+          <h2 className="text-lg font-bold text-slate-900 mb-4">Target Role Distribution</h2>
           <div className="space-y-4">
             {roleEntries.map(([role, count]) => {
               const pct = Math.round((count / analytics.totalStudents) * 100);
               return (
                 <div key={role} className="flex items-center gap-4">
                   <div className="flex-1">
-                    <p className="text-sm font-semibold text-white">{role}</p>
+                    <p className="text-sm font-semibold text-slate-900">{role}</p>
                     <p className="text-xs text-slate-500">{count} student{count !== 1 ? 's' : ''} · {pct}%</p>
                   </div>
                   <div className="w-32 progress-bar">
@@ -115,22 +115,22 @@ export default function TeacherAnalytics() {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Top Performers */}
         <div className="glass-card p-6">
-          <h2 className="text-lg font-bold text-white mb-4">🏆 Top Performers</h2>
+          <h2 className="text-lg font-bold text-slate-900 mb-4">🏆 Top Performers</h2>
           <div className="space-y-3">
             {(analytics.topStudents || []).map((s, i) => (
-              <div key={s.id} className="flex items-center gap-3 p-3 rounded-xl bg-white/5 border border-white/5">
+              <div key={s.id} className="flex items-center gap-3 p-3 rounded-xl bg-white border border-slate-200">
                 <div className={`w-8 h-8 rounded-lg flex items-center justify-center font-bold text-sm ${
-                  i === 0 ? 'bg-amber-500/20 text-amber-400' :
-                  i === 1 ? 'bg-slate-400/20 text-slate-300' :
-                  'bg-orange-500/20 text-orange-400'
+                  i === 0 ? 'bg-amber-100 text-amber-600' :
+                  i === 1 ? 'bg-slate-200 text-slate-600' :
+                  'bg-orange-100 text-orange-600'
                 }`}>
                   #{i + 1}
                 </div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-white">{s.name}</p>
+                  <p className="text-sm font-semibold text-slate-900">{s.name}</p>
                   <p className="text-xs text-slate-500">{s.interviewCount} interviews</p>
                 </div>
-                <p className="text-lg font-bold text-emerald-400">{s.avgScore}</p>
+                <p className="text-lg font-bold text-emerald-600">{s.avgScore}</p>
               </div>
             ))}
             {(!analytics.topStudents || analytics.topStudents.length === 0) && <p className="text-slate-500 text-sm">No data yet.</p>}
@@ -139,16 +139,16 @@ export default function TeacherAnalytics() {
 
         {/* At-Risk Students */}
         <div className="glass-card p-6">
-          <h2 className="text-lg font-bold text-white mb-4">⚠️ At-Risk Students</h2>
+          <h2 className="text-lg font-bold text-slate-900 mb-4">⚠️ At-Risk Students</h2>
           <div className="space-y-3">
             {(analytics.weakStudents || []).map((s, i) => (
-              <div key={s.id} className="flex items-center gap-3 p-3 rounded-xl bg-red-500/5 border border-red-500/10">
-                <div className="w-8 h-8 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center font-bold text-sm">!</div>
+              <div key={s.id} className="flex items-center gap-3 p-3 rounded-xl bg-red-50 border border-red-100">
+                <div className="w-8 h-8 rounded-lg bg-red-100 text-red-600 flex items-center justify-center font-bold text-sm">!</div>
                 <div className="flex-1">
-                  <p className="text-sm font-semibold text-white">{s.name}</p>
+                  <p className="text-sm font-semibold text-slate-900">{s.name}</p>
                   <p className="text-xs text-slate-500">Progress: {s.progressPercent}%</p>
                 </div>
-                <p className="text-lg font-bold text-red-400">{s.avgScore}</p>
+                <p className="text-lg font-bold text-red-600">{s.avgScore}</p>
               </div>
             ))}
             {(!analytics.weakStudents || analytics.weakStudents.length === 0) && (

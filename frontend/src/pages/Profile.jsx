@@ -51,15 +51,15 @@ export default function Profile({ currentUser, onUserUpdate }) {
 
   return (
     <div className="fade-in max-w-4xl">
-      <h1 className="text-3xl font-bold text-white mb-2">My Profile</h1>
-      <p className="text-slate-400 mb-8">Configure your profile and skills for personalized AI roadmap generation.</p>
+      <h1 className="text-3xl font-bold text-slate-900 mb-2">My Profile</h1>
+      <p className="text-slate-600 mb-8">Configure your profile and skills for personalized AI roadmap generation.</p>
 
       {/* Basic Info */}
       <div className="glass-card p-6 mb-6">
-        <h2 className="text-lg font-bold text-white mb-4">Basic Information</h2>
+        <h2 className="text-lg font-bold text-slate-900 mb-4">Basic Information</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">Full Name</label>
+            <label className="block text-sm font-medium text-slate-600 mb-1.5">Full Name</label>
             <input
               type="text"
               className="input-field"
@@ -69,7 +69,7 @@ export default function Profile({ currentUser, onUserUpdate }) {
             />
           </div>
           <div>
-            <label className="block text-sm font-medium text-slate-400 mb-1.5">Email</label>
+            <label className="block text-sm font-medium text-slate-600 mb-1.5">Email</label>
             <input
               type="email"
               className="input-field"
@@ -83,16 +83,16 @@ export default function Profile({ currentUser, onUserUpdate }) {
 
       {/* Target Role */}
       <div className="glass-card p-6 mb-6">
-        <h2 className="text-lg font-bold text-white mb-4">Target Career Role</h2>
+        <h2 className="text-lg font-bold text-slate-900 mb-4">Target Career Role</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           {ROLES.map(role => (
             <button
               key={role}
               onClick={() => { setTargetRole(role); setSaved(false); }}
-              className={`p-4 rounded-xl text-sm font-medium transition-all duration-200 border text-left ${
+              className={`p-4 rounded-xl text-sm font-medium transition-all duration-200 border text-left shadow-sm ${
                 targetRole === role
-                  ? 'bg-blue-500/20 border-blue-500/40 text-blue-300'
-                  : 'bg-white/5 border-white/10 text-slate-400 hover:bg-white/10 hover:text-white'
+                  ? 'bg-blue-50 border-blue-200 text-blue-700'
+                  : 'bg-white border-slate-200 text-slate-600 hover:bg-slate-50 hover:text-slate-900'
               }`}
             >
               {role}
@@ -103,24 +103,24 @@ export default function Profile({ currentUser, onUserUpdate }) {
 
       {/* Skills */}
       <div className="glass-card p-6 mb-6">
-        <h2 className="text-lg font-bold text-white mb-1">Current Skills</h2>
-        <p className="text-xs text-slate-500 mb-4">Select all the skills you already possess. This powers your AI roadmap.</p>
+        <h2 className="text-lg font-bold text-slate-900 mb-1">Current Skills</h2>
+        <p className="text-xs text-slate-600 mb-4">Select all the skills you already possess. This powers your AI roadmap.</p>
         <div className="flex flex-wrap gap-2">
           {AVAILABLE_SKILLS.map(skill => (
             <button
               key={skill}
               onClick={() => toggleSkill(skill)}
-              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border ${
+              className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-200 border shadow-sm ${
                 selectedSkills.includes(skill)
-                  ? 'bg-emerald-500/20 border-emerald-500/40 text-emerald-300'
-                  : 'bg-white/5 border-white/10 text-slate-500 hover:text-slate-300 hover:bg-white/10'
+                  ? 'bg-emerald-50 border-emerald-200 text-emerald-700'
+                  : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900 hover:bg-slate-50'
               }`}
             >
               {selectedSkills.includes(skill) ? '✓ ' : ''}{skill}
             </button>
           ))}
         </div>
-        <p className="text-xs text-slate-600 mt-3">{selectedSkills.length} skills selected</p>
+        <p className="text-xs text-slate-500 mt-3">{selectedSkills.length} skills selected</p>
       </div>
 
       {/* Save */}
@@ -128,7 +128,7 @@ export default function Profile({ currentUser, onUserUpdate }) {
         <button onClick={handleSave} disabled={saving} className="btn-primary">
           {saving ? 'Saving...' : saved ? '✓ Saved!' : 'Save Profile'}
         </button>
-        {saved && <span className="text-emerald-400 text-sm font-medium">Profile updated successfully!</span>}
+        {saved && <span className="text-emerald-600 text-sm font-medium">Profile updated successfully!</span>}
       </div>
     </div>
   );
