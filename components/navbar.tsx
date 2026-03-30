@@ -32,13 +32,13 @@ export function Navbar() {
                 </div>
             </div>
             <span className="hidden font-bold sm:inline-block text-xl tracking-tight text-foreground">
-              Codely
+              OmniEngineer
             </span>
           </Link>
           <nav className="flex items-center gap-6 text-sm font-medium">
             <DropdownMenu>
               <DropdownMenuTrigger className="transition-colors hover:text-primary text-foreground/80 flex items-center gap-1 outline-none">
-                Learning Hub
+                Domain Hub
                 <ArrowDown className="h-3 w-3 opacity-50" />
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">

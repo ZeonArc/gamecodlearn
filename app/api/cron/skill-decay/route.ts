@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server"
 import { createClient } from "@supabase/supabase-js"
+import { triggerN8NAsync, N8N_WORKFLOWS } from "@/lib/n8n/client"
 
 /**
  * Skill Decay Cron API (replacement for n8n scheduled workflow)
@@ -75,6 +76,15 @@ export async function GET(req: Request) {
 
       affectedUsers.add(skill.user_id)
       totalDecayed++
+    }
+
+    // Trigger n8n async pipeline for skill decay notifications/reports
+    if (totalDecayed > 0) {
+      triggerN8NAsync(N8N_WORKFLOWS.SKILL_DECAY, {
+        totalDecayed,
+        uniqueUsers: affectedUsers.size,
+        timestamp: new Date().toISOString()
+      })
     }
 
     return NextResponse.json({

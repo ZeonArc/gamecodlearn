@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { jsonModel, model } from "@/lib/gemini"
+import { MOCK_ASSESSMENTS, MOCK_VIVA_EVALUATION } from "@/lib/mock-data"
 
 /**
  * AI Assessment Engine — supports 4 assessment types:
  * mcq, coding, conceptmap, viva
+ *
+ * Resilient: Falls back to rich mock data if Gemini is unavailable.
  */
 export async function POST(req: Request) {
   try {
@@ -33,35 +35,32 @@ export async function POST(req: Request) {
 
     if (action === "generate") {
       if (!type) return NextResponse.json({ error: "Missing type" }, { status: 400 })
-      const subjectTopic = topic || skills
 
-      const prompts: Record<string, string> = {
-        mcq: `Generate a quiz of exactly 10 multiple-choice questions on "${subjectTopic}" for a ${goal} candidate.
-Return JSON array:
-[{ "id": 1, "question": "...", "options": ["A) ...", "B) ...", "C) ...", "D) ..."], "correct": "A", "explanation": "Why A is correct" }]`,
+      // Try AI generation, fallback to mock data
+      try {
+        const { jsonModel } = await import("@/lib/gemini")
+        const subjectTopic = topic || skills
 
-        coding: `Generate exactly 3 coding challenges on "${subjectTopic}" for a ${goal} candidate. Vary difficulty.
-Return JSON array:
-[{ "id": 1, "title": "Problem Name", "difficulty": "easy|medium|hard", "description": "Full problem statement", "examples": [{ "input": "...", "output": "..." }], "starterCode": "function solve() {\\n  // your code\\n}", "testCases": [{ "input": "...", "expected": "..." }] }]`,
+        const prompts: Record<string, string> = {
+          mcq: `Generate a quiz of exactly 10 multiple-choice questions on "${subjectTopic}" for a ${goal} candidate.\nReturn JSON array:\n[{ "id": 1, "question": "...", "options": ["A) ...", "B) ...", "C) ...", "D) ..."], "correct": "A", "explanation": "Why A is correct" }]`,
+          coding: `Generate exactly 3 coding challenges on "${subjectTopic}" for a ${goal} candidate. Vary difficulty.\nReturn JSON array:\n[{ "id": 1, "title": "Problem Name", "difficulty": "easy|medium|hard", "description": "Full problem statement", "examples": [{ "input": "...", "output": "..." }], "starterCode": "function solve() {\\n  // your code\\n}", "testCases": [{ "input": "...", "expected": "..." }] }]`,
+          conceptmap: `Generate a concept mapping exercise on "${subjectTopic}". Create 8 concepts and their relationships.\nReturn JSON:\n{ "concepts": [{ "id": "c1", "label": "Concept Name" }], "connections": [{ "from": "c1", "to": "c2", "label": "relationship type" }], "missingConnections": [{ "from": "c1", "to": "c3", "label": "?" }] }\nThe missingConnections are the ones the student needs to figure out.`,
+          viva: `Generate 5 oral/viva interview questions on "${subjectTopic}" for a ${goal} candidate.\nQuestions should test deep understanding, not just recall. Mix conceptual and scenario-based.\nReturn JSON array:\n[{ "id": 1, "question": "...", "difficulty": "easy|medium|hard", "keyPoints": ["Point student should mention", "Another key point"], "followUp": "Follow-up question if they answer well" }]`,
+        }
 
-        conceptmap: `Generate a concept mapping exercise on "${subjectTopic}". Create 8 concepts and their relationships.
-Return JSON:
-{ "concepts": [{ "id": "c1", "label": "Concept Name" }], "connections": [{ "from": "c1", "to": "c2", "label": "relationship type" }], "missingConnections": [{ "from": "c1", "to": "c3", "label": "?" }] }
-The missingConnections are the ones the student needs to figure out.`,
+        const prompt = prompts[type]
+        if (!prompt) return NextResponse.json({ error: "Invalid type" }, { status: 400 })
 
-        viva: `Generate 5 oral/viva interview questions on "${subjectTopic}" for a ${goal} candidate.
-Questions should test deep understanding, not just recall. Mix conceptual and scenario-based.
-Return JSON array:
-[{ "id": 1, "question": "...", "difficulty": "easy|medium|hard", "keyPoints": ["Point student should mention", "Another key point"], "followUp": "Follow-up question if they answer well" }]`
+        const result = await jsonModel.generateContent(prompt)
+        const questions = JSON.parse(result.response.text())
+        return NextResponse.json({ success: true, type, questions })
+      } catch (aiError) {
+        console.warn("Assessment AI failed, using mock data:", aiError)
+        const mockMap: Record<string, any> = MOCK_ASSESSMENTS
+        const questions = mockMap[type]
+        if (!questions) return NextResponse.json({ error: "Invalid type" }, { status: 400 })
+        return NextResponse.json({ success: true, type, questions, fallback: true })
       }
-
-      const prompt = prompts[type]
-      if (!prompt) return NextResponse.json({ error: "Invalid type" }, { status: 400 })
-
-      const result = await jsonModel.generateContent(prompt)
-      const questions = JSON.parse(result.response.text())
-
-      return NextResponse.json({ success: true, type, questions })
     }
 
     if (action === "evaluate") {
@@ -69,17 +68,16 @@ Return JSON array:
         return NextResponse.json({ error: "Missing answer or questionContext" }, { status: 400 })
       }
 
-      const evalPrompt = `Evaluate this assessment answer:
-
-Question: ${JSON.stringify(questionContext)}
-Student Answer: ${answer}
-
-Provide detailed feedback in markdown. Include score out of 10, what was good, what to improve, and the ideal answer.`
-
-      const result = await model.generateContent(evalPrompt)
-      const evaluation = result.response.text()
-
-      return NextResponse.json({ success: true, evaluation })
+      try {
+        const { model } = await import("@/lib/gemini")
+        const evalPrompt = `Evaluate this assessment answer:\n\nQuestion: ${JSON.stringify(questionContext)}\nStudent Answer: ${answer}\n\nProvide detailed feedback in markdown. Include score out of 10, what was good, what to improve, and the ideal answer.`
+        const result = await model.generateContent(evalPrompt)
+        const evaluation = result.response.text()
+        return NextResponse.json({ success: true, evaluation })
+      } catch (aiError) {
+        console.warn("Evaluation AI failed, using mock:", aiError)
+        return NextResponse.json({ success: true, evaluation: MOCK_VIVA_EVALUATION, fallback: true })
+      }
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 })

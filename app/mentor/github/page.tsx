@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
+import { dispatchN8NEvent } from "@/components/ui/n8n-activity-toast"
 
 export default function GitHubPage() {
   const [username, setUsername] = useState("")
@@ -43,7 +44,10 @@ export default function GitHubPage() {
         body: JSON.stringify({ owner, repo }),
       })
       const data = await res.json()
-      if (data.success) setAnalysis(data.analysis)
+      if (data.success) {
+        setAnalysis(data.analysis)
+        dispatchN8NEvent("github-analysis")
+      }
     } catch {}
     setAnalyzing(null)
   }

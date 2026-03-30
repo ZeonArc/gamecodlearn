@@ -8,6 +8,7 @@ import { AuthProvider } from "@/components/auth-provider"
 import { AIChat } from "@/components/ai-chat"
 import { StreakPopup } from "@/components/gamification/streak-popup"
 import { LiveBackground } from "@/components/ui/live-background"
+import { N8NActivityToast } from "@/components/ui/n8n-activity-toast"
 
 
 
@@ -44,6 +45,7 @@ export default function RootLayout({
               <Footer />
               <AIChat />
               <StreakPopup />
+              <N8NActivityToast />
             </div>
           </AuthProvider>
         </ThemeProvider>

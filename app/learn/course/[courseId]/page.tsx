@@ -1,129 +1,100 @@
 "use client"
 
-import { useState } from "react"
-import { useParams, useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
+import { useParams } from "next/navigation"
 import { ModuleSidebar } from "@/components/learn/module-sidebar"
 import { CoursePlayer } from "@/components/learn/course-player"
-import { Button } from "@/components/ui/button"
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft, Sparkles } from "lucide-react"
 import Link from "next/link"
-
-// MOCK DATA - Will be replaced by Supabase
-const MOCK_COURSES = [
-  {
-    id: "scratch-basics",
-    title: "Code with Blocks 🧩",
-    modules: [
-      {
-        id: "m1",
-        title: "Module 1: Intro",
-        lessons: [
-          { id: "l1", title: "Drag & Drop", type: "visualizer", content: "reverse-string-challenge" }
-        ]
-      }
-    ]
-  },
-  {
-    id: "python-kids",
-    title: "Python for Kids 🐍",
-    modules: [
-      {
-        id: "m1",
-        title: "Module 1: Getting Started",
-        lessons: [
-          { id: "l1", title: "What is Python?", type: "video", content: "intro-video-id" },
-          { id: "l2", title: "Your First Program", type: "text", content: "# Hello World\n\nLet's write your first Python code!\n\n```python\nprint('Hello, World!')\n```\n\nClick run to see the magic happen." },
-          { id: "l3", title: "Challenge: Fix the Bug", type: "visualizer", content: "reverse-string-challenge" },
-        ]
-      },
-      {
-        id: "m2",
-        title: "Module 2: Loops & Logic",
-        lessons: [
-          { id: "l4", title: "If This Then That", type: "text", content: "## Conditionals\n\nComputers make decisions using `if` statements..." },
-          { id: "l5", title: "Looping Around", type: "quiz", content: "quiz-loop-id" },
-        ]
-      }
-    ]
-  },
-  {
-    id: "dsa",
-    title: "Data Structures & Algo 🌳",
-    modules: [
-      {
-        id: "m1",
-        title: "Module 1: Sorting Algorithms",
-        lessons: [
-          { id: "l1", title: "Bubble Sort Visualization", type: "visualizer", content: "bubble-sort" },
-          { id: "l2", title: "Time Complexity", type: "text", content: "# Big O Notation\n\nBubble sort is O(n^2)..." },
-        ]
-      },
-      {
-        id: "m2",
-        title: "Module 2: Arrays",
-        lessons: [
-          { id: "l3", title: "Array Operations", type: "visualizer", content: "array-viz" }
-        ]
-      }
-    ]
-  },
-  {
-    id: "system-design",
-    title: "System Design 🏗️",
-    modules: [
-      {
-        id: "m1",
-        title: "Module 1: Scalability",
-        lessons: [
-          { id: "l1", title: "Load Balancers & Caches", type: "visualizer", content: "system-design-canvas" },
-          { id: "l2", title: "CAP Theorem", type: "text", content: "# CAP Theorem\n\nConsistency, Availability, Partition Tolerance." }
-        ]
-      }
-    ]
-  }
-]
+import { ALL_COURSES } from "@/lib/course-data"
 
 export default function CoursePage() {
   const params = useParams()
-  const router = useRouter()
-  // const courseId = params.courseId 
-  
-  // In a real app, useQuery(courseId) here.
-  const course = MOCK_COURSES.find(c => c.id === params.courseId) || MOCK_COURSES[1] // Fallback to Python if not found 
+  const courseId = params.courseId as string
 
-  const [currentLessonId, setCurrentLessonId] = useState(course.modules[0].lessons[0].id)
+  const [course, setCourse] = useState<any>(null)
+  const [currentLessonId, setCurrentLessonId] = useState("")
+
+  useEffect(() => {
+    // 1. AI-generated course from sessionStorage
+    if (courseId === "ai-generated") {
+      const stored = sessionStorage.getItem("ai-generated-course")
+      if (stored) {
+        const parsed = JSON.parse(stored)
+        setCourse(parsed)
+        setCurrentLessonId(parsed.modules[0]?.lessons[0]?.id || "")
+        return
+      }
+    }
+
+    // 2. Built-in course from centralized data
+    const found = ALL_COURSES.find(c => c.id === courseId)
+    if (found) {
+      setCourse(found)
+      setCurrentLessonId(found.modules[0].lessons[0].id)
+      return
+    }
+
+    // 3. Try sessionStorage fallback (custom course-xxx key)
+    const stored = sessionStorage.getItem(`course-${courseId}`)
+    if (stored) {
+      const parsed = JSON.parse(stored)
+      setCourse(parsed)
+      setCurrentLessonId(parsed.modules[0]?.lessons[0]?.id || "")
+      return
+    }
+
+    // 4. Default fallback
+    const fallback = ALL_COURSES[1] // Python for Kids
+    setCourse(fallback)
+    setCurrentLessonId(fallback.modules[0].lessons[0].id)
+  }, [courseId])
+
+  if (!course) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-black">
+        <div className="h-8 w-8 animate-spin rounded-full border-4 border-primary border-t-transparent" />
+      </div>
+    )
+  }
 
   const currentLesson = course.modules
-    .flatMap(m => m.lessons)
-    .find(l => l.id === currentLessonId)
+    .flatMap((m: any) => m.lessons)
+    .find((l: any) => l.id === currentLessonId)
 
-  if (!currentLesson) return <div>Lesson not found</div>
+  if (!currentLesson) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-muted-foreground bg-black">
+        <p>Lesson not found. <Link href="/learn" className="text-primary hover:underline">Go back</Link></p>
+      </div>
+    )
+  }
 
   const handleNext = () => {
-    const allLessons = course.modules.flatMap(m => m.lessons)
-    const idx = allLessons.findIndex(l => l.id === currentLessonId)
-    if (idx < allLessons.length - 1) {
-      setCurrentLessonId(allLessons[idx + 1].id)
-    }
+    const allLessons = course.modules.flatMap((m: any) => m.lessons)
+    const idx = allLessons.findIndex((l: any) => l.id === currentLessonId)
+    if (idx < allLessons.length - 1) setCurrentLessonId(allLessons[idx + 1].id)
   }
 
   const handlePrev = () => {
-    const allLessons = course.modules.flatMap(m => m.lessons)
-    const idx = allLessons.findIndex(l => l.id === currentLessonId)
-    if (idx > 0) {
-      setCurrentLessonId(allLessons[idx - 1].id)
-    }
+    const allLessons = course.modules.flatMap((m: any) => m.lessons)
+    const idx = allLessons.findIndex((l: any) => l.id === currentLessonId)
+    if (idx > 0) setCurrentLessonId(allLessons[idx - 1].id)
   }
+
+  const isAiGenerated = courseId === "ai-generated" || course.id?.startsWith("ai-")
 
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden">
-      {/* Navigation Sidebar */}
       <div className="flex-shrink-0 relative z-20">
         <div className="h-16 flex items-center px-4 border-b border-white/10 bg-black/50 backdrop-blur-md">
           <Link href="/learn" className="text-slate-400 hover:text-white transition-colors">
             <ArrowLeft className="w-5 h-5" />
           </Link>
-          <span className="ml-4 font-bold truncate w-48">{course.title}</span>
+          <span className="ml-4 font-bold truncate w-48 flex items-center gap-2">
+            {isAiGenerated && <Sparkles className="h-3 w-3 text-purple-400 shrink-0" />}
+            {course.title}
+          </span>
         </div>
         <ModuleSidebar 
           modules={course.modules as any} 
@@ -131,8 +102,6 @@ export default function CoursePage() {
           onSelectLesson={setCurrentLessonId}
         />
       </div>
-
-      {/* Main Content */}
       <div className="flex-1 relative z-10">
         <CoursePlayer 
           lesson={currentLesson as any} 

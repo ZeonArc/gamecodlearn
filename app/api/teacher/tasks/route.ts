@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
+import { triggerN8NAsync, N8N_WORKFLOWS } from "@/lib/n8n/client"
 
 export async function GET(req: Request) {
   try {
@@ -60,6 +61,18 @@ export async function POST(req: Request) {
       .single()
 
     if (error) throw error
+
+    // Trigger n8n async pipeline for task notifications
+    if (assignedStudents && assignedStudents.length > 0) {
+      triggerN8NAsync(N8N_WORKFLOWS.TASK_ASSIGNMENT, {
+        taskId: data.id,
+        teacherId,
+        title,
+        taskType,
+        studentCount: assignedStudents.length
+      })
+    }
+
     return NextResponse.json({ success: true, task: data })
   } catch (error) {
     console.error("Teacher tasks POST error:", error)

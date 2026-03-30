@@ -8,13 +8,15 @@ import { motion } from "framer-motion"
 
 export function Hero() {
   const [codeText, setCodeText] = useState("")
-  const FullCode = `export default function Future() {
-  return (
-    <Platform
-      tech={['Next.js', 'AI', 'Algorithms']}
-      state="Optimized"
-    />
-  );
+  const FullCode = `{
+  "system": "Mechanical",
+  "simulation": {
+    "type": "FEA_Stress_Test",
+    "material": "A36_Steel",
+    "load_N": 50000,
+    "status": "Running..."
+  },
+  "ai_diagnostics": "Optimal"
 }`
 
   useEffect(() => {
@@ -55,7 +57,7 @@ export function Hero() {
           </h1>
           
           <p className="text-xl text-muted-foreground leading-relaxed max-w-[500px]">
-            Master algorithms, data structures, and system design through fluid, AI-driven interactive experiences.
+            Master engineering disciplines—from Mechatronics and Circuits to Biotechnology and Game Physics—through interactive, AI-driven labs.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
@@ -65,8 +67,8 @@ export function Hero() {
               </Link>
             </Button>
             <Button asChild size="lg" variant="outline" className="h-14 px-8 rounded-full text-base font-medium bg-background/50 backdrop-blur-sm hover:bg-accent/10">
-              <Link href="/problems">
-                    Explore Problems
+              <Link href="/learn/generate">
+                    AI Course Generator
               </Link>
             </Button>
           </div>
@@ -78,7 +80,7 @@ export function Hero() {
              </div>
              <div className="flex items-center gap-2">
                  <Layers className="h-4 w-4 text-accent" />
-                 <span>Interactive IDE</span>
+                 <span>Interactive Emulators</span>
              </div>
           </div>
         </motion.div>
@@ -99,7 +101,7 @@ export function Hero() {
                         <div className="w-3 h-3 rounded-full bg-green-400" />
                     </div>
                     <div className="mx-auto text-xs font-medium text-muted-foreground flex items-center gap-2">
-                       <Code2 className="w-3 h-3" /> main.tsx
+                       <Layers className="w-3 h-3" /> simulation.json
                     </div>
                 </div>
                 

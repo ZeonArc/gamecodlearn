@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { useAuth } from "@/components/auth-provider"
+import { dispatchN8NEvent } from "@/components/ui/n8n-activity-toast"
 
 export default function AssessmentTypePage() {
   const { type } = useParams<{ type: string }>()
@@ -50,7 +51,10 @@ export default function AssessmentTypePage() {
         body: JSON.stringify({ userId: user?.id, action: "generate", type, topic: topic || undefined }),
       })
       const data = await res.json()
-      if (data.success) setQuestions(data.questions)
+      if (data.success) {
+        setQuestions(data.questions)
+        dispatchN8NEvent("course-enrichment")
+      }
     } catch {}
     setLoading(false)
   }
@@ -66,7 +70,10 @@ export default function AssessmentTypePage() {
         body: JSON.stringify({ userId: user?.id, action: "evaluate", answer: vivaAnswer, questionContext: q }),
       })
       const data = await res.json()
-      if (data.success) setVivaEval(data.evaluation)
+      if (data.success) {
+        setVivaEval(data.evaluation)
+        dispatchN8NEvent("skill-decay-monitor")
+      }
     } catch {}
     setEvaluating(false)
   }

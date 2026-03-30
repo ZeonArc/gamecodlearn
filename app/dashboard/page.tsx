@@ -15,6 +15,8 @@ import { createClient } from "@/lib/supabase/client"
 import { RoadmapDAG, RoadmapNode } from "@/components/mentor/roadmap-dag"
 import { PredictiveScore } from "@/components/mentor/predictive-score"
 import { ProjectSynthesis } from "@/components/mentor/project-synthesis"
+import { ProgressOverTimeChart, SkillRadarChart } from "@/components/charts/dashboard-charts"
+import { dispatchN8NEvent } from "@/components/ui/n8n-activity-toast"
 
 const supabase = createClient()
 
@@ -92,6 +94,7 @@ export default function DashboardPage() {
         setRoadmapData(data.updatedNodes)
         setRoadmapProgress(data.progress)
         setPredictiveScore(data.predictiveScore)
+        dispatchN8NEvent("onboarding-pipeline")
 
         // If a project was synthesized at a milestone, show it
         if (data.synthesizedProject) {
@@ -159,7 +162,7 @@ export default function DashboardPage() {
           { label: "Daily Streak", value: `${stats.streak} Days`, icon: Flame, color: "text-orange-500", border: "border-orange-500/50" },
           { label: "Total XP", value: stats.xp.toLocaleString(), icon: Zap, color: "text-yellow-500", border: "border-yellow-500/50" },
           { label: "Roadmap Progress", value: `${roadmapProgress}%`, icon: TrendingUp, color: "text-blue-500", border: "border-blue-500/50" },
-          { label: "Problems Solved", value: stats.problemsSolved, icon: Target, color: "text-green-500", border: "border-green-500/50" },
+          { label: "Lab Simulations", value: stats.problemsSolved, icon: Target, color: "text-green-500", border: "border-green-500/50" },
         ].map((stat, i) => (
           <motion.div
             key={i}
@@ -217,26 +220,50 @@ export default function DashboardPage() {
             </Card>
           </Link>
 
-          <div>
-            <Card className="bg-gradient-to-br from-amber-500/10 to-orange-500/10 border-amber-500/20 hover:border-amber-500/40 transition-all cursor-pointer group h-full"
-              onClick={() => {
-                if (user) {
-                  setSynthesizedProject(undefined) // trigger generation
-                }
-              }}
-            >
+          <Link href="/mentor/assessment">
+            <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20 hover:border-blue-500/40 transition-all cursor-pointer group h-full">
               <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-amber-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Sparkles className="w-6 h-6 text-amber-400" />
+                <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Target className="w-6 h-6 text-blue-400" />
                 </div>
                 <div>
-                  <h3 className="font-bold">Project Synthesis</h3>
-                  <p className="text-xs text-muted-foreground">AI-generated portfolio project</p>
+                  <h3 className="font-bold">AI Assessments</h3>
+                  <p className="text-xs text-muted-foreground">MCQ, Coding, Viva, Concepts</p>
                 </div>
-                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-amber-400 transition-colors" />
+                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-blue-400 transition-colors" />
               </CardContent>
             </Card>
-          </div>
+          </Link>
+
+          <Link href="/mentor/github">
+            <Card className="bg-gradient-to-br from-slate-500/10 to-zinc-500/10 border-slate-500/20 hover:border-slate-500/40 transition-all cursor-pointer group h-full">
+              <CardContent className="p-6 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-slate-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Activity className="w-6 h-6 text-slate-300" />
+                </div>
+                <div>
+                  <h3 className="font-bold">Project Analyzer</h3>
+                  <p className="text-xs text-muted-foreground">AI review for CAD & Code</p>
+                </div>
+                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-slate-300 transition-colors" />
+              </CardContent>
+            </Card>
+          </Link>
+
+          <Link href="/mentor/hr-bot">
+            <Card className="bg-gradient-to-br from-rose-500/10 to-pink-500/10 border-rose-500/20 hover:border-rose-500/40 transition-all cursor-pointer group h-full">
+              <CardContent className="p-6 flex items-center gap-4">
+                <div className="w-12 h-12 rounded-xl bg-rose-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                  <Trophy className="w-6 h-6 text-rose-400" />
+                </div>
+                <div>
+                  <h3 className="font-bold">Career Match</h3>
+                  <p className="text-xs text-muted-foreground">AI job matching & cover letters</p>
+                </div>
+                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-rose-400 transition-colors" />
+              </CardContent>
+            </Card>
+          </Link>
         </div>
       </motion.div>
 
@@ -287,6 +314,25 @@ export default function DashboardPage() {
                   </div>
                   <div>Last Sync: Just now</div>
                 </div>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Progress Over Time Chart */}
+          <motion.div
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.45 }}
+          >
+            <Card className="bg-card/20 backdrop-blur border-border/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <TrendingUp className="h-5 w-5 text-primary" />
+                  Progress Over Time
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <ProgressOverTimeChart />
               </CardContent>
             </Card>
           </motion.div>
@@ -396,6 +442,25 @@ export default function DashboardPage() {
             </Card>
           </motion.div>
 
+          {/* Skill Distribution Chart */}
+          <motion.div
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.65 }}
+          >
+            <Card className="bg-card/20 backdrop-blur border-border/50">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-sm font-medium">
+                  <Brain className="w-4 h-4 text-accent" />
+                  Skill Distribution
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <SkillRadarChart />
+              </CardContent>
+            </Card>
+          </motion.div>
+
           {/* Skills Health */}
           {hasProfile && (
             <motion.div
@@ -454,7 +519,7 @@ export default function DashboardPage() {
         </div>
         <div className="flex items-center gap-2">
           <div className="w-2 h-2 bg-green-500 rounded-full animate-ping" />
-          SYSTEM OPTIMAL
+          SYSTEM OPTIMAL // n8n CONNECTED
         </div>
       </motion.div>
     </div>

@@ -11,6 +11,7 @@ import {
 import { useAuth } from "@/components/auth-provider"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
+import { StudentPerformanceChart } from "@/components/charts/dashboard-charts"
 
 export default function TeacherDashboard() {
   const { user, isLoading } = useAuth()
@@ -191,6 +192,43 @@ export default function TeacherDashboard() {
             </div>
           </CardContent>
         </Card>
+
+        {/* Student Performance Chart */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mt-6">
+          <Card className="border-border/40 bg-card/30 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <BarChart3 className="h-5 w-5 text-accent" /> Student Performance
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <StudentPerformanceChart />
+            </CardContent>
+          </Card>
+          <Card className="border-border/40 bg-card/30 backdrop-blur">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-emerald-400" /> n8n Orchestration
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              {[
+                { workflow: "Task Assignment Notifier", status: "active", color: "bg-green-500" },
+                { workflow: "Weekly Progress Report", status: "scheduled", color: "bg-blue-500" },
+                { workflow: "Skill Decay Monitor", status: "active", color: "bg-green-500" },
+                { workflow: "Course Enrichment Pipeline", status: "idle", color: "bg-amber-500" },
+              ].map((w) => (
+                <div key={w.workflow} className="flex items-center justify-between p-2.5 rounded-lg bg-muted/20 border border-border/30">
+                  <span className="text-sm font-medium">{w.workflow}</span>
+                  <div className="flex items-center gap-2">
+                    <div className={`w-2 h-2 rounded-full ${w.color} ${w.status === 'active' ? 'animate-pulse' : ''}`} />
+                    <span className="text-xs text-muted-foreground capitalize">{w.status}</span>
+                  </div>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Recent Students */}
         {students.length > 0 && (
