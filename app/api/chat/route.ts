@@ -1,34 +1,30 @@
-
 import { NextResponse } from "next/server"
+import { model } from "@/lib/gemini"
 
 export async function POST(req: Request) {
   try {
     const { message, context } = await req.json()
 
-    // 1. Check if N8N_EXPLAIN_WEBHOOK is set
-    const n8nUrl = process.env.N8N_EXPLAIN_WEBHOOK
-
-    if (!n8nUrl) {
-      // Return a mock response if no backend is connected
-      return NextResponse.json({ 
-        response: `[MOCK AI] I see you're asking about "${message}". To get real answers, connect me to n8n! 🚀` 
-      })
+    if (!message) {
+      return NextResponse.json({ error: "Missing message" }, { status: 400 })
     }
 
-    // 2. Forward to n8n
-    const response = await fetch(n8nUrl, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ 
-        action: "chat",
-        message, 
-        context 
-      })
+    const systemPrompt = `You are Codely AI, an expert programming tutor and career mentor.
+You specialize in algorithms, data structures, system design, debugging, and career guidance.
+You give concise, helpful answers. When a user asks about code, provide clear explanations with examples.
+When helping with career advice, be specific and actionable.
+If the user provides context about what they're working on, tailor your answer to that context.
+Keep responses well-formatted with markdown when appropriate.
+${context ? `\nAdditional context: ${context}` : ""}
+`
+
+    const chat = model.startChat({
+      history: [],
+      generationConfig: { maxOutputTokens: 2048 },
     })
 
-    const data = await response.json()
-    // Assuming n8n returns { content: "answer" } or similar from Gemini node
-    const aiText = data.content || data.response || data.text || JSON.stringify(data)
+    const result = await chat.sendMessage(`${systemPrompt}\n\nUser: ${message}`)
+    const aiText = result.response.text()
 
     return NextResponse.json({ response: aiText })
 

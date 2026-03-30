@@ -31,7 +31,7 @@ export async function POST(req: Request) {
         return NextResponse.json({ error: "Profile not found" }, { status: 404 })
     }
 
-    // 2. Call Native Google Gemini SDK instead of n8n
+    // 2. Call Gemini
     const apiKey = process.env.GEMINI_API_KEY
     if (!apiKey) {
        console.error("GEMINI_API_KEY is missing from environment variables.")
@@ -39,26 +39,43 @@ export async function POST(req: Request) {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey)
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro", generationConfig: { responseMimeType: "application/json" } })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash", generationConfig: { responseMimeType: "application/json" } })
 
     const prompt = `You are an expert Career Mentor and Education Planner.
-Analyze the following user profile and generate a highly personalized career roadmap.
+Analyze the following user profile and generate a highly personalized career roadmap as a Directed Acyclic Graph (DAG).
+
 User Profile:
 - Academic Background: ${profile.academic_background}
 - Skills: ${profile.skills?.join(", ") || "None specified"}
 - Interests: ${profile.interests?.join(", ") || "None specified"}
+- Career Goal: ${profile.career_goal || "Software Engineer"}
 
-Your goal is to output a Directed Acyclic Graph (DAG) structure that outlines an optimal learning and project path.
-Return ONLY a JSON array of objects, where each object represents a node in the roadmap.
-Each node object must have the following schema:
-- "id": string (unique identifier, e.g., "node_1")
-- "label": string (short title of the milestone, e.g., "Learn React")
-- "type": string (must be one of: "course", "certification", "project", "internship", "goal")
-- "status": string (must be exactly "available", or "locked" if it has dependencies)
-- "dependencies": string[] (array of node ids that must be completed before this node. Use empty array [] if none)
-- "courseraQuery": string (an optimal search query to find this topic on Coursera. Keep it concise)
+Generate a DAG with 8-12 nodes that forms a realistic learning path from their current level to their career goal.
 
-Ensure the graph spans from immediate next steps to a major outcome. Make at least 5-8 nodes. The first 1-2 nodes should have no dependencies and status "available". Subsequent nodes should have dependencies and status "locked".`
+Return ONLY a JSON array of objects with this exact schema:
+[
+  {
+    "id": "node_1",
+    "label": "Short title (e.g. Learn React)",
+    "title": "Same as label",
+    "description": "2-3 sentence description of what this milestone involves and why it matters",
+    "type": "course|certification|project|internship|goal",
+    "status": "available|locked",
+    "xp_reward": number (50-500 based on difficulty),
+    "depends_on": [],
+    "dependencies": [],
+    "column": number (0 for starting nodes, 1 for next phase, 2 for intermediate, 3 for advanced),
+    "courseraQuery": "optimal search query for Coursera"
+  }
+]
+
+Rules:
+- First 2-3 nodes MUST have status "available" and empty dependencies arrays and column 0
+- All other nodes MUST have status "locked" and list their prerequisite node IDs in both depends_on AND dependencies arrays
+- Columns should progress from 0 (beginner) to 3+ (advanced/goal)
+- The final node should be type "goal" representing their career achievement
+- Include at least 1 project node and 1 certification node
+- Make the path branching where logical (not purely linear)`
 
     const aiResult = await model.generateContent(prompt)
     const aiText = aiResult.response.text()
@@ -72,16 +89,36 @@ Ensure the graph spans from immediate next steps to a major outcome. Make at lea
     }
 
     // 3. Save generated DAG Roadmap back to Supabase
+    const totalNodes = aiData.length
+    const availableNodes = aiData.filter((n: any) => n.status === 'available').length
+
     const { error: saveError } = await supabase
         .from('career_roadmaps')
         .upsert({
             user_id: userId,
-            dag_data: aiData // Ensure this is valid JSON array of nodes
+            dag_data: aiData,
+            progress_percent: 0,
+            predictive_score: Math.round(15 + Math.random() * 10), // initial baseline
+            last_activity: new Date().toISOString()
         }, { onConflict: 'user_id' })
 
     if (saveError) {
         console.error("Failed to save roadmap to DB:", saveError)
-        // Still return success of generation, but log error
+    }
+
+    // 4. Seed initial user_skills from profile
+    if (profile.skills && profile.skills.length > 0) {
+      const skillEntries = profile.skills.map((skill: string) => ({
+        user_id: userId,
+        skill_name: skill,
+        proficiency: 50, // baseline self-reported
+        last_verified: new Date().toISOString(),
+        is_decayed: false
+      }))
+
+      await supabase
+        .from('user_skills')
+        .upsert(skillEntries, { onConflict: 'user_id,skill_name' })
     }
 
     return NextResponse.json({ success: true, message: "Roadmap generated successfully.", data: aiData })
