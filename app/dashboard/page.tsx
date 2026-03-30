@@ -16,7 +16,7 @@ import { RoadmapDAG, RoadmapNode } from "@/components/mentor/roadmap-dag"
 import { PredictiveScore } from "@/components/mentor/predictive-score"
 import { ProjectSynthesis } from "@/components/mentor/project-synthesis"
 import { ProgressOverTimeChart, SkillRadarChart } from "@/components/charts/dashboard-charts"
-import { dispatchN8NEvent } from "@/components/ui/n8n-activity-toast"
+import { dispatchAIPipelineEvent } from "@/components/ui/ai-activity-toast"
 
 const supabase = createClient()
 
@@ -94,7 +94,7 @@ export default function DashboardPage() {
         setRoadmapData(data.updatedNodes)
         setRoadmapProgress(data.progress)
         setPredictiveScore(data.predictiveScore)
-        dispatchN8NEvent("onboarding-pipeline")
+        dispatchAIPipelineEvent("onboarding-pipeline")
 
         // If a project was synthesized at a milestone, show it
         if (data.synthesizedProject) {

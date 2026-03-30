@@ -8,15 +8,15 @@ import { AuthProvider } from "@/components/auth-provider"
 import { AIChat } from "@/components/ai-chat"
 import { StreakPopup } from "@/components/gamification/streak-popup"
 import { LiveBackground } from "@/components/ui/live-background"
-import { N8NActivityToast } from "@/components/ui/n8n-activity-toast"
+import { AIPipelineToast } from "@/components/ui/ai-activity-toast"
 
 
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Codely",
-  description: "Gamified learning for programming concepts",
+  title: "OmniEngineer",
+  description: "Universal AI-Mentored Engineering Training Platform",
 };
 
 export default function RootLayout({
@@ -45,7 +45,7 @@ export default function RootLayout({
               <Footer />
               <AIChat />
               <StreakPopup />
-              <N8NActivityToast />
+              <AIPipelineToast />
             </div>
           </AuthProvider>
         </ThemeProvider>

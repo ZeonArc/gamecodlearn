@@ -15,7 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Progress } from "@/components/ui/progress"
 import { useAuth } from "@/components/auth-provider"
-import { dispatchN8NEvent } from "@/components/ui/n8n-activity-toast"
+import { dispatchAIPipelineEvent } from "@/components/ui/ai-activity-toast"
 
 export default function AssessmentTypePage() {
   const { type } = useParams<{ type: string }>()
@@ -53,7 +53,7 @@ export default function AssessmentTypePage() {
       const data = await res.json()
       if (data.success) {
         setQuestions(data.questions)
-        dispatchN8NEvent("course-enrichment")
+        dispatchAIPipelineEvent("course-enrichment")
       }
     } catch {}
     setLoading(false)
@@ -72,7 +72,7 @@ export default function AssessmentTypePage() {
       const data = await res.json()
       if (data.success) {
         setVivaEval(data.evaluation)
-        dispatchN8NEvent("skill-decay-monitor")
+        dispatchAIPipelineEvent("skill-decay-monitor")
       }
     } catch {}
     setEvaluating(false)

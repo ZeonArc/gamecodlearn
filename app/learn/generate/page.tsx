@@ -11,7 +11,7 @@ import {
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { dispatchN8NEvent } from "@/components/ui/n8n-activity-toast"
+import { dispatchAIPipelineEvent } from "@/components/ui/ai-activity-toast"
 
 const SUGGESTED_TOPICS = [
   "React Hooks Deep Dive",
@@ -55,7 +55,7 @@ export default function GenerateCoursePage() {
       const data = await res.json()
       if (data.success) {
         setGeneratedCourse(data.course)
-        dispatchN8NEvent("course-enrichment")
+        dispatchAIPipelineEvent("course-enrichment")
       } else {
         setError(data.error || "Failed to generate course")
       }
