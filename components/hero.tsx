@@ -59,16 +59,16 @@ export function Hero() {
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 mt-4">
-            <Link href="/auth?mode=signup">
-              <Button size="lg" className="h-14 px-8 rounded-full text-base font-medium shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+            <Button asChild size="lg" className="h-14 px-8 rounded-full text-base font-medium shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
+              <Link href="/auth?mode=signup">
                 Start Learning <ArrowRight className="ml-2 h-5 w-5" />
-              </Button>
-            </Link>
-            <Link href="/problems">
-                <Button size="lg" variant="outline" className="h-14 px-8 rounded-full text-base font-medium bg-background/50 backdrop-blur-sm hover:bg-accent/10">
+              </Link>
+            </Button>
+            <Button asChild size="lg" variant="outline" className="h-14 px-8 rounded-full text-base font-medium bg-background/50 backdrop-blur-sm hover:bg-accent/10">
+              <Link href="/problems">
                     Explore Problems
-                </Button>
-            </Link>
+              </Link>
+            </Button>
           </div>
           
           <div className="flex items-center gap-8 mt-8 text-sm font-medium text-muted-foreground">

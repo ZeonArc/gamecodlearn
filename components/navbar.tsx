@@ -17,7 +17,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { XPBadge } from "@/components/gamification/xp-badge"
 
 export function Navbar() {
-  const { user, signOut } = useAuth()
+  const { user, signOut, isTeacher } = useAuth()
 
   return (
     <div className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/60">
@@ -85,7 +85,7 @@ export function Navbar() {
                 AI Mentor
                 <ArrowDown className="h-3 w-3 opacity-50" />
               </DropdownMenuTrigger>
-              <DropdownMenuContent align="start" className="w-48">
+              <DropdownMenuContent align="start" className="w-56">
                 <DropdownMenuLabel>AI Tools</DropdownMenuLabel>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem asChild>
@@ -103,8 +103,31 @@ export function Navbar() {
                     <span>📄</span> Smart Resume
                   </Link>
                 </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/mentor/assessment" className="flex items-center gap-2 cursor-pointer">
+                    <span>📝</span> AI Assessments
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/mentor/github" className="flex items-center gap-2 cursor-pointer">
+                    <span>🐙</span> GitHub Analyzer
+                  </Link>
+                </DropdownMenuItem>
+                <DropdownMenuItem asChild>
+                  <Link href="/mentor/hr-bot" className="flex items-center gap-2 cursor-pointer">
+                    <span>💼</span> Career Match
+                  </Link>
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
+            {isTeacher && (
+              <Link
+                href="/teacher"
+                className="transition-colors hover:text-emerald-400 text-emerald-500/80 font-semibold"
+              >
+                Teacher Panel
+              </Link>
+            )}
           </nav>
         </div>
         <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
@@ -147,12 +170,12 @@ export function Navbar() {
               </DropdownMenu>
             ) : (
               <>
-                <Link href="/auth">
-                    <Button variant="ghost" size="sm">Login</Button>
-                </Link>
-                 <Link href="/auth?mode=signup">
-                    <Button size="sm">Get Started</Button>
-                </Link>
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/auth">Login</Link>
+                </Button>
+                <Button asChild size="sm">
+                  <Link href="/auth?mode=signup">Get Started</Link>
+                </Button>
               </>
             )}
             <ThemeToggle />
