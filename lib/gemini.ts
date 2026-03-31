@@ -13,3 +13,14 @@ export const jsonModel = genAI.getGenerativeModel({
 });
 
 export { genAI };
+
+export function parseAIJSON(text: string) {
+  try {
+    // Strip markdown formatting common with Gemini output
+    const cleanText = text.replace(/```json/g, "").replace(/```/g, "").trim();
+    return JSON.parse(cleanText);
+  } catch (err) {
+    console.error("AI JSON Parse Error. Raw Text:", text);
+    throw new Error("Failed to parse AI JSON output");
+  }
+}

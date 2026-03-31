@@ -9,6 +9,7 @@ import { AIChat } from "@/components/ai-chat"
 import { StreakPopup } from "@/components/gamification/streak-popup"
 import { LiveBackground } from "@/components/ui/live-background"
 import { AIPipelineToast } from "@/components/ui/ai-activity-toast"
+import { SplashCursor } from "@/components/react-bits/splash-cursor"
 
 
 
@@ -27,15 +28,16 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="light"
+            forcedTheme="light"
+            disableTransitionOnChange
+          >
           <AuthProvider>
             <div className="relative flex min-h-screen flex-col overflow-x-hidden">
-               {/* Global Ambient Background */}
+               {/* Splash Cursor React Bits Layer */}
+               <SplashCursor />
                {/* Live Background Manager */}
                <LiveBackground />
                

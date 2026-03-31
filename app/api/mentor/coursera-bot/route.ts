@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { jsonModel } from "@/lib/gemini"
+import { jsonModel } , parseAIJSON } from "@/lib/gemini"
 import { searchCourseraCourses } from "@/lib/coursera/client"
 
 export async function POST(req: Request) {
@@ -53,7 +53,7 @@ Generate a personalized learning plan. Return JSON:
 Generate exactly 4 course recommendations.`
 
     const aiResult = await jsonModel.generateContent(prompt)
-    const aiPlan = JSON.parse(aiResult.response.text())
+    const aiPlan = parseAIJSON(aiResult.response.text())
 
     // Fetch actual Coursera courses for each recommendation
     const enrichedPlan = await Promise.all(

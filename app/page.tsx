@@ -9,7 +9,12 @@ import {
 import Link from "next/link"
 import { cn } from "@/lib/utils"
 import { Hero } from "@/components/hero"
-
+import { SplitText } from "@/components/react-bits/split-text"
+import { ShinyText } from "@/components/react-bits/shiny-text"
+import { TiltedCard } from "@/components/react-bits/tilted-card"
+import { Magnet } from "@/components/react-bits/magnet"
+import { TrueFocus } from "@/components/react-bits/true-focus"
+import { StarBorder } from "@/components/react-bits/star-border"
 export default function Home() {
   const tracks = [
     {
@@ -180,7 +185,7 @@ export default function Home() {
   ]
 
   return (
-    <div className="min-h-screen bg-black/[0.96] antialiased bg-grid-white/[0.02] relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 antialiased bg-grid-slate-900/[0.04] relative overflow-hidden">
       {/* Ambient Background */}
       <div className="fixed inset-0 z-0">
         <div className="absolute top-0 left-1/4 w-96 h-96 bg-blue-500/10 rounded-full blur-3xl animate-pulse" />
@@ -192,18 +197,18 @@ export default function Home() {
 
       <div className="relative z-10 container mx-auto px-4 py-8">
         <div className="max-w-4xl mx-auto text-center mb-16 space-y-4">
-          <motion.h1 
+          <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-400"
+            className="text-4xl md:text-6xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-slate-900 to-slate-600 inline-block"
           >
-            Where do you want to learn?
-          </motion.h1>
+            <TrueFocus sentence="Where do you want to learn?" />
+          </motion.div>
           <motion.p 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.1 }}
-            className="text-slate-400 text-lg md:text-xl max-w-2xl mx-auto"
+            className="text-slate-500 text-lg md:text-xl max-w-2xl mx-auto"
           >
             9 learning tracks, 30+ courses, interactive labs, and AI-powered tutoring — from coding to cybersecurity to no-code.
           </motion.p>
@@ -227,13 +232,13 @@ export default function Home() {
                 <div className="flex-1 text-center md:text-left">
                   <div className="flex items-center gap-2 justify-center md:justify-start mb-2">
                     <span className="text-xs font-bold uppercase tracking-wider text-purple-400 px-2 py-0.5 rounded-full border border-purple-500/30 bg-purple-500/10">
-                      ✨ AI Powered
+                      <ShinyText speed={2} className="text-purple-300">✨ AI Powered</ShinyText>
                     </span>
                   </div>
-                  <h2 className="text-2xl md:text-3xl font-black text-white mb-2">
+                  <h2 className="text-2xl md:text-3xl font-black text-slate-900 mb-2">
                     Generate Any Course with AI
                   </h2>
-                  <p className="text-slate-400 max-w-lg">
+                  <p className="text-slate-500 max-w-lg">
                     Enter any topic — IoT, Cybersecurity, Product Management, anything — and our AI instantly creates a full course with modules, exercises, and examples.
                   </p>
                 </div>
@@ -249,44 +254,45 @@ export default function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-5 max-w-6xl mx-auto">
           {tracks.map((track, idx) => (
             <Link key={track.id} href={track.href} className="group relative">
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.2 + idx * 0.05 }}
-                whileHover={{ y: -5 }}
-                className={cn(
-                  "h-full p-7 rounded-2xl border border-white/5 bg-black/40 backdrop-blur-xl transition-all duration-300",
-                  "hover:shadow-2xl hover:shadow-black/50",
-                  track.border
-                )}
-              >
-                <div className={cn("absolute inset-0 rounded-2xl bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", track.color)} />
-                
-                <div className="relative z-10 space-y-5">
-                  <div className="flex items-start justify-between">
-                    <div className="w-14 h-14 rounded-xl bg-white/5 flex items-center justify-center backdrop-blur-md border border-white/10 group-hover:scale-110 transition-transform duration-300">
-                      {track.icon}
+              <TiltedCard tiltFactor={15}>
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.2 + idx * 0.05 }}
+                  className={cn(
+                    "h-full p-7 rounded-2xl border border-slate-200 bg-slate-50 backdrop-blur-xl transition-all duration-300",
+                    "hover:shadow-2xl hover:shadow-black/50",
+                    track.border
+                  )}
+                >
+                  <div className={cn("absolute inset-0 rounded-2xl bg-gradient-to-br opacity-0 group-hover:opacity-100 transition-opacity duration-500", track.color)} />
+                  
+                  <div className="relative z-10 space-y-5">
+                    <div className="flex items-start justify-between">
+                      <div className="w-14 h-14 rounded-xl bg-white flex items-center justify-center backdrop-blur-md border border-slate-300 group-hover:scale-110 transition-transform duration-300">
+                        {track.icon}
+                      </div>
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 py-0.5 rounded-full border border-slate-200 bg-white">
+                        {track.tag}
+                      </span>
                     </div>
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 px-2 py-0.5 rounded-full border border-white/5 bg-white/5">
-                      {track.tag}
-                    </span>
+                    <div className="space-y-1.5">
+                      <h2 className="text-xl font-bold text-slate-900">
+                        {track.title}
+                      </h2>
+                      <p className="text-slate-500 text-sm leading-relaxed">
+                        {track.description}
+                      </p>
+                    </div>
+                    <div className="pt-4 border-t border-slate-200 flex items-center justify-between">
+                      <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
+                        {track.stats}
+                      </span>
+                      <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-slate-900 group-hover:translate-x-1 transition-all" />
+                    </div>
                   </div>
-                  <div className="space-y-1.5">
-                    <h2 className="text-xl font-bold text-white">
-                      {track.title}
-                    </h2>
-                    <p className="text-slate-400 text-sm leading-relaxed">
-                      {track.description}
-                    </p>
-                  </div>
-                  <div className="pt-4 border-t border-white/5 flex items-center justify-between">
-                    <span className="text-[10px] font-medium text-slate-500 uppercase tracking-wider">
-                      {track.stats}
-                    </span>
-                    <ChevronRight className="w-4 h-4 text-slate-600 group-hover:text-white group-hover:translate-x-1 transition-all" />
-                  </div>
-                </div>
-              </motion.div>
+                </motion.div>
+              </TiltedCard>
             </Link>
           ))}
         </div>
@@ -300,37 +306,37 @@ export default function Home() {
         >
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <Link href="/learn/dsa" className="group">
-              <div className="p-5 rounded-2xl border border-white/5 bg-black/40 hover:border-emerald-500/30 transition-all flex items-center gap-4">
+              <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:border-emerald-500/30 transition-all flex items-center gap-4">
                 <div className="h-10 w-10 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 shrink-0">
                   <Layers className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-sm">Interactive DSA Lab</h3>
-                  <p className="text-[10px] text-slate-400">Sorting, trees, linked lists, stacks</p>
+                  <h3 className="font-bold text-slate-900 text-sm">Interactive DSA Lab</h3>
+                  <p className="text-[10px] text-slate-500">Sorting, trees, linked lists, stacks</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-600 ml-auto group-hover:text-emerald-400 transition-colors" />
               </div>
             </Link>
             <Link href="/mentor/assessment" className="group">
-              <div className="p-5 rounded-2xl border border-white/5 bg-black/40 hover:border-blue-500/30 transition-all flex items-center gap-4">
+              <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:border-blue-500/30 transition-all flex items-center gap-4">
                 <div className="h-10 w-10 rounded-xl bg-blue-500/10 flex items-center justify-center text-blue-400 shrink-0">
                   <BookOpen className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-sm">AI Assessments</h3>
-                  <p className="text-[10px] text-slate-400">MCQ, Coding, Concept Maps, Viva</p>
+                  <h3 className="font-bold text-slate-900 text-sm">AI Assessments</h3>
+                  <p className="text-[10px] text-slate-500">MCQ, Coding, Concept Maps, Viva</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-600 ml-auto group-hover:text-blue-400 transition-colors" />
               </div>
             </Link>
             <Link href="/learn/generate" className="group">
-              <div className="p-5 rounded-2xl border border-white/5 bg-black/40 hover:border-purple-500/30 transition-all flex items-center gap-4">
+              <div className="p-5 rounded-2xl border border-slate-200 bg-slate-50 hover:border-purple-500/30 transition-all flex items-center gap-4">
                 <div className="h-10 w-10 rounded-xl bg-purple-500/10 flex items-center justify-center text-purple-400 shrink-0">
                   <Wand2 className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-white text-sm">Generate Course</h3>
-                  <p className="text-[10px] text-slate-400">AI creates any course instantly</p>
+                  <h3 className="font-bold text-slate-900 text-sm">Generate Course</h3>
+                  <p className="text-[10px] text-slate-500">AI creates any course instantly</p>
                 </div>
                 <ChevronRight className="w-4 h-4 text-slate-600 ml-auto group-hover:text-purple-400 transition-colors" />
               </div>
@@ -339,7 +345,7 @@ export default function Home() {
         </motion.div>
 
         {/* Features Footer */}
-        <div className="mt-24 grid grid-cols-1 md:grid-cols-4 gap-6 border-t border-white/5 pt-12 max-w-6xl mx-auto">
+        <div className="mt-24 grid grid-cols-1 md:grid-cols-4 gap-6 border-t border-slate-200 pt-12 max-w-6xl mx-auto">
           {[
             { icon: <Globe className="w-5 h-5" />, color: "text-blue-400 bg-blue-500/10", title: "30+ Courses", desc: "From IoT to UI/UX" },
             { icon: <Brain className="w-5 h-5" />, color: "text-purple-400 bg-purple-500/10", title: "AI Tutor", desc: "Context-aware help" },
@@ -349,7 +355,7 @@ export default function Home() {
             <div key={i} className="flex items-center gap-3">
               <div className={cn("p-2 rounded-lg shrink-0", f.color)}>{f.icon}</div>
               <div>
-                <h3 className="text-sm font-semibold text-white">{f.title}</h3>
+                <h3 className="text-sm font-semibold text-slate-900">{f.title}</h3>
                 <p className="text-xs text-slate-500">{f.desc}</p>
               </div>
             </div>

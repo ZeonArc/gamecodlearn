@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { jsonModel } from "@/lib/gemini"
+import { jsonModel } , parseAIJSON } from "@/lib/gemini"
 
 /**
  * Smart Resume Builder API
@@ -80,7 +80,7 @@ Generate a tailored resume content package. Return a JSON object:
 }`
 
     const result = await jsonModel.generateContent(prompt)
-    const resumeData = JSON.parse(result.response.text())
+    const resumeData = parseAIJSON(result.response.text())
 
     // Save resume snapshot
     await supabase

@@ -38,7 +38,7 @@ export async function POST(req: Request) {
 
       // Try AI generation, fallback to mock data
       try {
-        const { jsonModel } = await import("@/lib/gemini")
+        const { jsonModel , parseAIJSON } = await import("@/lib/gemini")
         const subjectTopic = topic || skills
 
         const prompts: Record<string, string> = {
@@ -52,7 +52,7 @@ export async function POST(req: Request) {
         if (!prompt) return NextResponse.json({ error: "Invalid type" }, { status: 400 })
 
         const result = await jsonModel.generateContent(prompt)
-        const questions = JSON.parse(result.response.text())
+        const questions = parseAIJSON(result.response.text())
         return NextResponse.json({ success: true, type, questions })
       } catch (aiError) {
         console.warn("Assessment AI failed, using mock data:", aiError)
@@ -69,7 +69,7 @@ export async function POST(req: Request) {
       }
 
       try {
-        const { model } = await import("@/lib/gemini")
+        const { model , parseAIJSON } = await import("@/lib/gemini")
         const evalPrompt = `Evaluate this assessment answer:\n\nQuestion: ${JSON.stringify(questionContext)}\nStudent Answer: ${answer}\n\nProvide detailed feedback in markdown. Include score out of 10, what was good, what to improve, and the ideal answer.`
         const result = await model.generateContent(evalPrompt)
         const evaluation = result.response.text()

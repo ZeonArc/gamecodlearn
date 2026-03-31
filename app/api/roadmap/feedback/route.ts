@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { jsonModel } from "@/lib/gemini"
+import { jsonModel } , parseAIJSON } from "@/lib/gemini"
 
 /**
  * Dynamic Feedback Loop API
@@ -99,7 +99,7 @@ Return a JSON object with:
 
       try {
         const result = await jsonModel.generateContent(projectPrompt)
-        synthesizedProject = JSON.parse(result.response.text())
+        synthesizedProject = parseAIJSON(result.response.text())
       } catch (e) {
         console.error("Project synthesis failed:", e)
       }

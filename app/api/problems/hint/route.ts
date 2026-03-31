@@ -15,7 +15,7 @@ export async function POST(req: Request) {
 
     const genAI = new GoogleGenerativeAI(apiKey)
     // We can use a standard text model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-pro" })
+    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" })
 
     const systemPrompt = `You are an expert Programming Tutor. Your goal is to help a student unstuck without giving them the final code answer.
 You MUST follow these rules strictly:
@@ -38,7 +38,7 @@ ${promptMsg || "I am stuck. Please give me a hint."}
 `
 
     const modelJsonConfig = genAI.getGenerativeModel({ 
-        model: "gemini-1.5-pro", 
+        model: "gemini-2.0-flash", 
         generationConfig: { responseMimeType: "application/json" } 
     })
 

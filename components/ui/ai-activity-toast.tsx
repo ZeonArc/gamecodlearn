@@ -3,6 +3,7 @@
 import { useEffect, useState, useCallback } from "react"
 import { motion, AnimatePresence } from "framer-motion"
 import { Activity, Zap, CheckCircle, Loader2, Brain, GitBranch, BookOpen, BriefcaseBusiness, Cpu, Search } from "lucide-react"
+import { ShinyText } from "@/components/react-bits/shiny-text"
 
 interface PipelineEvent {
   id: string
@@ -90,15 +91,16 @@ export function AIPipelineToast() {
               initial={{ opacity: 0, x: -100, scale: 0.8 }}
               animate={{ opacity: 1, x: 0, scale: 1 }}
               exit={{ opacity: 0, x: -100, scale: 0.8 }}
-              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-border/40 bg-card/80 backdrop-blur-xl shadow-2xl"
+              className="flex items-center gap-2.5 px-4 py-2.5 rounded-xl border border-slate-200 bg-card/80 backdrop-blur-xl shadow-2xl"
             >
               <div className={`${event.color}`}>
                 <Icon className="h-4 w-4" />
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-1.5">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-primary/70">AI</span>
-                  <span className="text-[10px] text-muted-foreground">pipeline</span>
+                  <ShinyText speed={3} className="text-[10px] font-bold uppercase tracking-wider text-primary">
+                    AI PIPELINE
+                  </ShinyText>
                 </div>
                 <p className="text-xs font-medium truncate">{event.label}</p>
               </div>

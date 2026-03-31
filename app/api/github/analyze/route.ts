@@ -18,7 +18,7 @@ export async function POST(req: Request) {
     }
 
     try {
-      const { jsonModel } = await import("@/lib/gemini")
+      const { jsonModel , parseAIJSON } = await import("@/lib/gemini")
 
       const prompt = `You are a Senior Code Reviewer and Software Architect.
 Analyze this GitHub repository and provide a comprehensive code review.
@@ -51,7 +51,7 @@ Return a JSON object:
 }`
 
       const result = await jsonModel.generateContent(prompt)
-      const analysis = JSON.parse(result.response.text())
+      const analysis = parseAIJSON(result.response.text())
       return NextResponse.json({ success: true, analysis })
     } catch (aiError) {
       console.warn("GitHub AI analysis failed, using mock:", aiError)

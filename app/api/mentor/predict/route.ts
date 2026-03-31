@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { jsonModel } from "@/lib/gemini"
+import { jsonModel } , parseAIJSON } from "@/lib/gemini"
 
 /**
  * Predictive Success Score API
@@ -91,7 +91,7 @@ Return a JSON object:
 }`
 
     const result = await jsonModel.generateContent(prompt)
-    const prediction = JSON.parse(result.response.text())
+    const prediction = parseAIJSON(result.response.text())
 
     // Save the score
     await supabase

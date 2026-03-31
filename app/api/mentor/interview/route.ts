@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { jsonModel, model } from "@/lib/gemini"
+import { jsonModel, model } , parseAIJSON } from "@/lib/gemini"
 
 /**
  * AI Mock Interview API
@@ -68,7 +68,7 @@ Return a JSON array of objects:
 ]`
 
       const result = await jsonModel.generateContent(prompt)
-      const questions = JSON.parse(result.response.text())
+      const questions = parseAIJSON(result.response.text())
 
       return NextResponse.json({ success: true, questions })
     }

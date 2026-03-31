@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server"
 import { createServerClient } from "@supabase/ssr"
 import { cookies } from "next/headers"
-import { jsonModel } from "@/lib/gemini"
+import { jsonModel } , parseAIJSON } from "@/lib/gemini"
 
 /**
  * Project Synthesis API
@@ -75,7 +75,7 @@ Return a JSON object:
 }`
 
     const result = await jsonModel.generateContent(prompt)
-    const project = JSON.parse(result.response.text())
+    const project = parseAIJSON(result.response.text())
 
     return NextResponse.json({ success: true, project })
 

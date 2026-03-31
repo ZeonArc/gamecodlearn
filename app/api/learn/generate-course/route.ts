@@ -22,7 +22,7 @@ export async function POST(req: Request) {
     const level = difficulty || "intermediate"
 
     try {
-      const { jsonModel } = await import("@/lib/gemini")
+      const { jsonModel , parseAIJSON } = await import("@/lib/gemini")
 
       const prompt = `You are an expert course creator. Generate a complete educational course on "${topic}" at ${level} difficulty.
 
@@ -67,7 +67,7 @@ Rules:
 - Make the content genuinely educational, not placeholder text`
 
       const result = await jsonModel.generateContent(prompt)
-      const course = JSON.parse(result.response.text())
+      const course = parseAIJSON(result.response.text())
 
       return NextResponse.json({ success: true, course })
     } catch (aiError) {

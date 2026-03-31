@@ -6,6 +6,10 @@ import { ArrowLeft, BookOpen, Star, Lock, Wand2, ChevronRight } from "lucide-rea
 import Link from "next/link"
 import { useState, useEffect } from "react"
 import { cn } from "@/lib/utils"
+import { SplitText } from "@/components/react-bits/split-text"
+import { TiltedCard } from "@/components/react-bits/tilted-card"
+import { Magnet } from "@/components/react-bits/magnet"
+import { ShinyText } from "@/components/react-bits/shiny-text"
 
 const TRACK_DATA: Record<string, {
   title: string; description: string; courses: { id: string; title: string; desc: string; icon: string; locked: boolean }[]; theme: string
@@ -178,7 +182,7 @@ export default function TrackPage() {
   const data = TRACK_DATA[trackId]
 
   if (!data) return (
-    <div className="min-h-screen flex items-center justify-center bg-black text-white">
+    <div className="min-h-screen flex items-center justify-center bg-slate-50 text-slate-900">
       <div className="text-center space-y-4">
         <p className="text-3xl">🔍</p>
         <h2 className="text-xl font-bold">Track not found</h2>
@@ -188,27 +192,27 @@ export default function TrackPage() {
   )
 
   return (
-    <div className="min-h-screen bg-black text-white relative overflow-hidden">
+    <div className="min-h-screen bg-slate-50 text-slate-900 relative overflow-hidden">
        <div className={cn("absolute top-0 left-0 w-full h-96 bg-gradient-to-b opacity-20 pointer-events-none", data.theme)} />
 
       <div className="container mx-auto px-4 py-8 relative z-10">
-        <Link href="/learn" className="inline-flex items-center text-slate-400 hover:text-white mb-8 transition-colors">
+        <Link href="/learn" className="inline-flex items-center text-slate-500 hover:text-slate-900 mb-8 transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" /> Back to Hub
         </Link>
 
         <header className="mb-12">
-          <motion.h1 
+          <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
-            className="text-4xl md:text-5xl font-bold mb-4"
+            className="text-4xl md:text-5xl font-bold mb-4 inline-block"
           >
-            {data.title}
-          </motion.h1>
+            <SplitText text={data.title} />
+          </motion.div>
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.1 }}
-            className="text-xl text-slate-400"
+            className="text-xl text-slate-500"
           >
             {data.description}
           </motion.p>
@@ -222,19 +226,23 @@ export default function TrackPage() {
           className="mb-8"
         >
           <Link href="/learn/generate" className="block group">
-            <div className="p-6 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-900/20 to-pink-900/20 hover:border-purple-500/40 transition-all flex items-center gap-4">
-              <div className="h-14 w-14 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform shrink-0">
-                <Wand2 className="h-7 w-7" />
-              </div>
-              <div className="flex-1">
-                <div className="flex items-center gap-2 mb-0.5">
-                  <h3 className="text-lg font-bold text-white">Generate a Custom Course</h3>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/30 bg-purple-500/10">AI</span>
+            <Magnet padding={10} magnetStrength={0.05}>
+              <div className="p-6 rounded-2xl border border-purple-500/20 bg-gradient-to-r from-purple-900/20 to-pink-900/20 hover:border-purple-500/40 transition-all flex items-center gap-4">
+                <div className="h-14 w-14 rounded-xl bg-purple-500/20 flex items-center justify-center text-purple-400 group-hover:scale-110 transition-transform shrink-0">
+                  <Wand2 className="h-7 w-7" />
                 </div>
-                <p className="text-sm text-slate-400">Any topic in this domain — AI will create a full course with exercises</p>
+                <div className="flex-1">
+                  <div className="flex items-center gap-2 mb-0.5">
+                    <h3 className="text-lg font-bold text-slate-900">Generate a Custom Course</h3>
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-purple-400 px-1.5 py-0.5 rounded border border-purple-500/30 bg-purple-500/10">
+                      <ShinyText speed={2}>AI</ShinyText>
+                    </span>
+                  </div>
+                  <p className="text-sm text-slate-500">Any topic in this domain — AI will create a full course with exercises</p>
+                </div>
+                <ChevronRight className="w-5 h-5 text-slate-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
               </div>
-              <ChevronRight className="w-5 h-5 text-slate-600 group-hover:text-purple-400 group-hover:translate-x-1 transition-all" />
-            </div>
+            </Magnet>
           </Link>
         </motion.div>
 
@@ -247,33 +255,35 @@ export default function TrackPage() {
               transition={{ delay: 0.2 + idx * 0.08 }}
             >
               <Link href={course.locked ? "#" : `/learn/course/${course.id}`} className={cn("block group h-full", course.locked && "cursor-not-allowed opacity-60")}>
-                <div className="bg-white/5 border border-white/10 rounded-2xl p-6 h-full flex flex-col hover:bg-white/10 transition-all duration-300 relative overflow-hidden">
-                  {course.locked && (
-                    <div className="absolute top-4 right-4 bg-black/50 p-2 rounded-full">
-                      <Lock className="w-4 h-4 text-slate-400" />
-                    </div>
-                  )}
-                  <div className="text-4xl mb-4">{course.icon}</div>
-                  <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">{course.title}</h3>
-                  <p className="text-slate-400 text-sm mb-6 flex-1">{course.desc}</p>
-                  <div className="flex items-center justify-between mt-auto pt-4 border-t border-white/5">
-                    <div className="flex items-center text-xs text-slate-500">
-                      <BookOpen className="w-3 h-3 mr-1" /> {data.courses.length} courses
-                    </div>
-                    {course.locked ? (
-                      <span className="text-xs font-mono uppercase text-slate-600">Locked</span>
-                    ) : (
-                      <span className="text-xs font-mono uppercase text-green-400 group-hover:underline">Start &rarr;</span>
+                <TiltedCard tiltFactor={12} className="h-full">
+                  <div className="bg-white border border-slate-300 rounded-2xl p-6 h-full flex flex-col hover:bg-slate-100 transition-all duration-300 relative overflow-hidden">
+                    {course.locked && (
+                      <div className="absolute top-4 right-4 bg-slate-50 p-2 rounded-full">
+                        <Lock className="w-4 h-4 text-slate-500" />
+                      </div>
                     )}
+                    <div className="text-4xl mb-4">{course.icon}</div>
+                    <h3 className="text-xl font-bold mb-2 group-hover:text-blue-400 transition-colors">{course.title}</h3>
+                    <p className="text-slate-500 text-sm mb-6 flex-1">{course.desc}</p>
+                    <div className="flex items-center justify-between mt-auto pt-4 border-t border-slate-200">
+                      <div className="flex items-center text-xs text-slate-500">
+                        <BookOpen className="w-3 h-3 mr-1" /> {data.courses.length} courses
+                      </div>
+                      {course.locked ? (
+                        <span className="text-xs font-mono uppercase text-slate-600">Locked</span>
+                      ) : (
+                        <span className="text-xs font-mono uppercase text-green-400 group-hover:underline">Start &rarr;</span>
+                      )}
+                    </div>
                   </div>
-                </div>
+                </TiltedCard>
               </Link>
             </motion.div>
           ))}
         </div>
 
         {/* Coursera Section */}
-        <div className="mt-20 border-t border-white/10 pt-12">
+        <div className="mt-20 border-t border-slate-300 pt-12">
             <h2 className="text-2xl font-bold mb-8 flex items-center gap-3">
               <Star className="w-6 h-6 text-yellow-400" />
               AI Recommended External Courses
@@ -317,7 +327,7 @@ function CourseraRecommendations({ trackId }: { trackId: string }) {
 
   if (loading) {
      return [1,2,3].map(i => (
-        <div key={i} className="animate-pulse bg-white/5 border border-white/10 rounded-2xl h-48"></div>
+        <div key={i} className="animate-pulse bg-white border border-slate-300 rounded-2xl h-48"></div>
      ))
   }
 
@@ -326,17 +336,19 @@ function CourseraRecommendations({ trackId }: { trackId: string }) {
   }
 
   return courses.map((c, i) => (
-       <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.1 }}>
-            <a href={`https://www.coursera.org/learn/${c.slug}`} target="_blank" rel="noreferrer" className="block group h-full">
-                <div className="bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-500/20 rounded-2xl p-6 h-full flex flex-col hover:border-blue-500/50 transition-all duration-300">
-                    <h3 className="text-lg font-bold mb-2 group-hover:text-blue-400 line-clamp-2">{c.name}</h3>
-                    <p className="text-slate-400 text-sm mb-6 flex-1 line-clamp-3">{c.description || "Learn from top universities and companies on Coursera."}</p>
-                    <div className="mt-auto pt-4 border-t border-blue-500/20 flex items-center justify-between text-xs font-mono text-slate-400">
-                        <span>External Link</span>
-                        <span className="text-blue-400 group-hover:underline">View on Coursera &rarr;</span>
-                    </div>
-                </div>
-            </a>
-       </motion.div>
+        <motion.div key={i} initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 + i * 0.1 }}>
+             <a href={`https://www.coursera.org/learn/${c.slug}`} target="_blank" rel="noreferrer" className="block group h-full">
+                 <TiltedCard tiltFactor={10} className="h-full">
+                   <div className="bg-gradient-to-br from-blue-900/20 to-transparent border border-blue-500/20 rounded-2xl p-6 h-full flex flex-col hover:border-blue-500/50 transition-all duration-300">
+                       <h3 className="text-lg font-bold mb-2 group-hover:text-blue-400 line-clamp-2">{c.name}</h3>
+                       <p className="text-slate-500 text-sm mb-6 flex-1 line-clamp-3">{c.description || "Learn from top universities and companies on Coursera."}</p>
+                       <div className="mt-auto pt-4 border-t border-blue-500/20 flex items-center justify-between text-xs font-mono text-slate-500">
+                           <span>External Link</span>
+                           <span className="text-blue-400 group-hover:underline">View on Coursera &rarr;</span>
+                       </div>
+                   </div>
+                 </TiltedCard>
+             </a>
+        </motion.div>
   ))
 }

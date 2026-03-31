@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server"
-import { jsonModel } from "@/lib/gemini"
+import { jsonModel } , parseAIJSON } from "@/lib/gemini"
 
 export async function POST(req: Request) {
   try {
@@ -30,7 +30,7 @@ Return JSON:
 }`
 
     const result = await jsonModel.generateContent(prompt)
-    const data = JSON.parse(result.response.text())
+    const data = parseAIJSON(result.response.text())
 
     return NextResponse.json({ success: true, ...data })
   } catch (error) {

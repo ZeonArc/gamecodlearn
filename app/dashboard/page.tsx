@@ -17,6 +17,10 @@ import { PredictiveScore } from "@/components/mentor/predictive-score"
 import { ProjectSynthesis } from "@/components/mentor/project-synthesis"
 import { ProgressOverTimeChart, SkillRadarChart } from "@/components/charts/dashboard-charts"
 import { dispatchAIPipelineEvent } from "@/components/ui/ai-activity-toast"
+import { SplitText } from "@/components/react-bits/split-text"
+import { ShinyText } from "@/components/react-bits/shiny-text"
+import { TiltedCard } from "@/components/react-bits/tilted-card"
+import { Magnet } from "@/components/react-bits/magnet"
 
 const supabase = createClient()
 
@@ -135,24 +139,28 @@ export default function DashboardPage() {
       <motion.div
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-border/40 pb-6"
+        className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-slate-200 pb-6"
       >
         <div>
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-1">
             <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
             ONLINE // {user.email}
           </div>
-          <h1 className="text-4xl font-black tracking-tighter uppercase">
-            Command Center
+          <h1 className="text-4xl font-black tracking-tighter uppercase inline-block">
+            <SplitText text={greeting || "Command Center"} />
           </h1>
         </div>
         <div className="flex items-center gap-3">
-          <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
-            <Activity className="mr-2 h-4 w-4" /> System Status
-          </Button>
-          <Button className="bg-primary text-primary-foreground shadow-[0_0_15px_rgba(0,255,255,0.4)]">
-            <Zap className="mr-2 h-4 w-4" /> Quick Play
-          </Button>
+          <Magnet padding={20} magnetStrength={0.1}>
+            <Button variant="outline" className="border-primary/50 text-primary hover:bg-primary/10">
+              <Activity className="mr-2 h-4 w-4" /> <ShinyText speed={3}>System Status</ShinyText>
+            </Button>
+          </Magnet>
+          <Magnet padding={20} magnetStrength={0.1}>
+            <Button className="bg-primary text-primary-foreground shadow-[0_0_15px_rgba(0,255,255,0.4)]">
+              <Zap className="mr-2 h-4 w-4" /> <ShinyText speed={2} className="text-black">Quick Play</ShinyText>
+            </Button>
+          </Magnet>
         </div>
       </motion.div>
 
@@ -169,16 +177,19 @@ export default function DashboardPage() {
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: i * 0.1 }}
+            className="h-full"
           >
-            <Card className={`bg-card/30 backdrop-blur border-l-4 ${stat.border}`}>
-              <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium text-muted-foreground">{stat.label}</CardTitle>
-                <stat.icon className={`h-4 w-4 ${stat.color}`} />
-              </CardHeader>
-              <CardContent>
-                <div className="text-2xl font-bold">{stat.value}</div>
-              </CardContent>
-            </Card>
+            <TiltedCard tiltFactor={10} className="h-full">
+              <Card className={`bg-card/30 backdrop-blur border-l-4 h-full ${stat.border}`}>
+                <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardTitle className="text-sm font-medium text-muted-foreground">{stat.label}</CardTitle>
+                  <stat.icon className={`h-4 w-4 ${stat.color}`} />
+                </CardHeader>
+                <CardContent>
+                  <div className="text-2xl font-bold">{stat.value}</div>
+                </CardContent>
+              </Card>
+            </TiltedCard>
           </motion.div>
         ))}
       </div>
@@ -191,78 +202,88 @@ export default function DashboardPage() {
       >
         <div className="grid gap-4 md:grid-cols-3">
           <Link href="/mentor/interview">
-            <Card className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-500/20 hover:border-purple-500/40 transition-all cursor-pointer group h-full">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Brain className="w-6 h-6 text-purple-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold">Mock Interview</h3>
-                  <p className="text-xs text-muted-foreground">AI-powered practice questions</p>
-                </div>
-                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-purple-400 transition-colors" />
-              </CardContent>
-            </Card>
+            <TiltedCard tiltFactor={12} className="h-full">
+              <Card className="bg-gradient-to-br from-purple-500/10 to-blue-500/10 border-purple-500/20 hover:border-purple-500/40 transition-all cursor-pointer group h-full">
+                <CardContent className="p-6 flex items-center gap-4 h-full">
+                  <div className="w-12 h-12 rounded-xl bg-purple-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Brain className="w-6 h-6 text-purple-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Mock Interview</h3>
+                    <p className="text-xs text-muted-foreground">AI-powered practice questions</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-purple-400 transition-colors" />
+                </CardContent>
+              </Card>
+            </TiltedCard>
           </Link>
 
           <Link href="/mentor/resume">
-            <Card className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-500/20 hover:border-emerald-500/40 transition-all cursor-pointer group h-full">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <FileText className="w-6 h-6 text-emerald-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold">Smart Resume</h3>
-                  <p className="text-xs text-muted-foreground">Auto-generate resume content</p>
-                </div>
-                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-emerald-400 transition-colors" />
-              </CardContent>
-            </Card>
+            <TiltedCard tiltFactor={12} className="h-full">
+              <Card className="bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border-emerald-500/20 hover:border-emerald-500/40 transition-all cursor-pointer group h-full">
+                <CardContent className="p-6 flex items-center gap-4 h-full">
+                  <div className="w-12 h-12 rounded-xl bg-emerald-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <FileText className="w-6 h-6 text-emerald-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Smart Resume</h3>
+                    <p className="text-xs text-muted-foreground">Auto-generate resume content</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-emerald-400 transition-colors" />
+                </CardContent>
+              </Card>
+            </TiltedCard>
           </Link>
 
           <Link href="/mentor/assessment">
-            <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20 hover:border-blue-500/40 transition-all cursor-pointer group h-full">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Target className="w-6 h-6 text-blue-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold">AI Assessments</h3>
-                  <p className="text-xs text-muted-foreground">MCQ, Coding, Viva, Concepts</p>
-                </div>
-                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-blue-400 transition-colors" />
-              </CardContent>
-            </Card>
+            <TiltedCard tiltFactor={12} className="h-full">
+              <Card className="bg-gradient-to-br from-blue-500/10 to-cyan-500/10 border-blue-500/20 hover:border-blue-500/40 transition-all cursor-pointer group h-full">
+                <CardContent className="p-6 flex items-center gap-4 h-full">
+                  <div className="w-12 h-12 rounded-xl bg-blue-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Target className="w-6 h-6 text-blue-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">AI Assessments</h3>
+                    <p className="text-xs text-muted-foreground">MCQ, Coding, Viva, Concepts</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-blue-400 transition-colors" />
+                </CardContent>
+              </Card>
+            </TiltedCard>
           </Link>
 
           <Link href="/mentor/github">
-            <Card className="bg-gradient-to-br from-slate-500/10 to-zinc-500/10 border-slate-500/20 hover:border-slate-500/40 transition-all cursor-pointer group h-full">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-slate-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Activity className="w-6 h-6 text-slate-300" />
-                </div>
-                <div>
-                  <h3 className="font-bold">Project Analyzer</h3>
-                  <p className="text-xs text-muted-foreground">AI review for CAD & Code</p>
-                </div>
-                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-slate-300 transition-colors" />
-              </CardContent>
-            </Card>
+            <TiltedCard tiltFactor={12} className="h-full">
+              <Card className="bg-gradient-to-br from-slate-500/10 to-zinc-500/10 border-slate-500/20 hover:border-slate-500/40 transition-all cursor-pointer group h-full">
+                <CardContent className="p-6 flex items-center gap-4 h-full">
+                  <div className="w-12 h-12 rounded-xl bg-slate-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Activity className="w-6 h-6 text-slate-300" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Project Analyzer</h3>
+                    <p className="text-xs text-muted-foreground">AI review for CAD & Code</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-slate-300 transition-colors" />
+                </CardContent>
+              </Card>
+            </TiltedCard>
           </Link>
 
           <Link href="/mentor/hr-bot">
-            <Card className="bg-gradient-to-br from-rose-500/10 to-pink-500/10 border-rose-500/20 hover:border-rose-500/40 transition-all cursor-pointer group h-full">
-              <CardContent className="p-6 flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-rose-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
-                  <Trophy className="w-6 h-6 text-rose-400" />
-                </div>
-                <div>
-                  <h3 className="font-bold">Career Match</h3>
-                  <p className="text-xs text-muted-foreground">AI job matching & cover letters</p>
-                </div>
-                <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-rose-400 transition-colors" />
-              </CardContent>
-            </Card>
+            <TiltedCard tiltFactor={12} className="h-full">
+              <Card className="bg-gradient-to-br from-rose-500/10 to-pink-500/10 border-rose-500/20 hover:border-rose-500/40 transition-all cursor-pointer group h-full">
+                <CardContent className="p-6 flex items-center gap-4 h-full">
+                  <div className="w-12 h-12 rounded-xl bg-rose-500/20 flex items-center justify-center group-hover:scale-110 transition-transform">
+                    <Trophy className="w-6 h-6 text-rose-400" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold">Career Match</h3>
+                    <p className="text-xs text-muted-foreground">AI job matching & cover letters</p>
+                  </div>
+                  <ArrowRight className="w-4 h-4 ml-auto text-muted-foreground group-hover:text-rose-400 transition-colors" />
+                </CardContent>
+              </Card>
+            </TiltedCard>
           </Link>
         </div>
       </motion.div>
@@ -510,7 +531,7 @@ export default function DashboardPage() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.8 }}
-        className="p-4 rounded-lg border border-border/30 bg-black/40 font-mono text-xs text-muted-foreground flex justify-between items-center"
+        className="p-4 rounded-lg border border-border/30 bg-slate-50 font-mono text-xs text-muted-foreground flex justify-between items-center"
       >
         <div className="flex gap-8">
           <span>CPU: <span className="text-green-500">12%</span></span>

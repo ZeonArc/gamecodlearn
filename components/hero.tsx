@@ -5,6 +5,7 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Code2, Sparkles, Layers } from "lucide-react"
 import { motion } from "framer-motion"
+import { StarBorder } from "@/components/react-bits/star-border"
 
 export function Hero() {
   const [codeText, setCodeText] = useState("")
@@ -60,12 +61,12 @@ export function Hero() {
             Master engineering disciplines—from Mechatronics and Circuits to Biotechnology and Game Physics—through interactive, AI-driven labs.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 mt-4">
-            <Button asChild size="lg" className="h-14 px-8 rounded-full text-base font-medium shadow-md hover:shadow-lg transition-all hover:-translate-y-0.5">
-              <Link href="/auth?mode=signup">
-                Start Learning <ArrowRight className="ml-2 h-5 w-5" />
-              </Link>
-            </Button>
+          <div className="flex flex-col sm:flex-row gap-4 mt-4 items-center">
+            <Link href="/auth?mode=signup">
+              <StarBorder speed={3}>
+                <span className="flex items-center gap-2">Start Learning <ArrowRight className="h-4 w-4" /></span>
+              </StarBorder>
+            </Link>
             <Button asChild size="lg" variant="outline" className="h-14 px-8 rounded-full text-base font-medium bg-background/50 backdrop-blur-sm hover:bg-accent/10">
               <Link href="/learn/generate">
                     AI Course Generator
@@ -92,9 +93,9 @@ export function Hero() {
            transition={{ duration: 1, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
            className="relative w-full max-w-lg mx-auto lg:mx-0"
         >
-            <div className="relative rounded-2xl overflow-hidden border border-border/40 bg-card/80 backdrop-blur-xl shadow-2xl">
+            <div className="relative rounded-2xl overflow-hidden border border-slate-200 bg-card/80 backdrop-blur-xl shadow-2xl">
                 {/* Windows/Mac like Header */}
-                <div className="flex items-center gap-2 px-4 py-3 bg-muted/40 border-b border-border/40">
+                <div className="flex items-center gap-2 px-4 py-3 bg-muted/40 border-b border-slate-200">
                     <div className="flex gap-1.5">
                         <div className="w-3 h-3 rounded-full bg-red-400" />
                         <div className="w-3 h-3 rounded-full bg-yellow-400" />

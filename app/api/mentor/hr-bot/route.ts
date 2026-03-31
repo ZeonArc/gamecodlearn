@@ -25,7 +25,7 @@ export async function POST(req: Request) {
       try {
         const jobs = await fetchMockJobs()
 
-        const { jsonModel } = await import("@/lib/gemini")
+        const { jsonModel , parseAIJSON } = await import("@/lib/gemini")
 
         const prompt = `You are an HR Analytics AI. Score how well this candidate matches each job.
 
@@ -41,7 +41,7 @@ Return JSON array (same order as jobs):
 [{ "jobIndex": 0, "matchPercent": number (0-100), "matchedSkills": ["skill"], "missingSkills": ["skill"], "recommendation": "Brief actionable advice" }]`
 
         const result = await jsonModel.generateContent(prompt)
-        const matches = JSON.parse(result.response.text())
+        const matches = parseAIJSON(result.response.text())
 
         const rankedJobs = jobs.map((job, i) => ({
           ...job,
@@ -63,7 +63,7 @@ Return JSON array (same order as jobs):
         const job = jobs.find((j) => j.id === jobId)
         if (!job) return NextResponse.json({ error: "Job not found" }, { status: 404 })
 
-        const { model } = await import("@/lib/gemini")
+        const { model , parseAIJSON } = await import("@/lib/gemini")
 
         const prompt = `Write a professional cover letter for this candidate applying to this job.
 

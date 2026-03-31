@@ -94,10 +94,10 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
   return (
     <div className="flex h-[calc(100vh-4rem)]">
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col bg-black/90 relative">
+      <div className="flex-1 flex flex-col bg-slate-50 relative">
         {/* Content Header */}
-        <div className="h-16 border-b border-white/10 flex items-center justify-between px-8 bg-black/40 backdrop-blur-md">
-          <h1 className="text-xl font-bold text-white truncate max-w-[50%]">{lesson.title}</h1>
+        <div className="h-16 border-b border-slate-300 flex items-center justify-between px-8 bg-slate-50 backdrop-blur-md">
+          <h1 className="text-xl font-bold text-slate-900 truncate max-w-[50%]">{lesson.title}</h1>
           <div className="flex items-center gap-2">
             <Button variant="ghost" size="sm" onClick={onPrev}><ChevronLeft className="w-4 h-4 mr-1" /> Prev</Button>
             <Button variant="ghost" size="sm" onClick={onNext}>Next <ChevronRight className="w-4 h-4 ml-1" /></Button>
@@ -127,13 +127,13 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
             )}
             
             {lesson.type === "video" && (
-              <div className="aspect-video bg-black rounded-xl border border-white/10 flex items-center justify-center text-slate-500">
+              <div className="aspect-video bg-slate-50 rounded-xl border border-slate-300 flex items-center justify-center text-slate-500">
                 [Video Player Placeholder for {lesson.content}]
               </div>
             )}
 
             {lesson.type === "visualizer" && (
-              <div className="bg-slate-900/50 rounded-xl border border-white/10 p-4">
+              <div className="bg-slate-900/50 rounded-xl border border-slate-300 p-4">
                  {lesson.content === "reverse-string-challenge" && <CodeConstructor />}
                  {lesson.content === "bubble-sort" && <SortingVisualizer />}
                  {lesson.content === "array-viz" && <ArrayVisualizer />}
@@ -172,7 +172,7 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
           </motion.div>
 
           {/* Completion Action */}
-          <div className="mt-16 py-8 border-t border-white/5 flex justify-center">
+          <div className="mt-16 py-8 border-t border-slate-200 flex justify-center">
             <Button 
               size="lg" 
               onClick={handleComplete}
@@ -201,10 +201,10 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            className="w-96 border-l border-white/10 bg-black/95 backdrop-blur-xl absolute right-0 top-0 bottom-0 z-50 shadow-2xl flex flex-col"
+            className="w-96 border-l border-slate-300 bg-slate-50 backdrop-blur-xl absolute right-0 top-0 bottom-0 z-50 shadow-2xl flex flex-col"
           >
             {/* Header */}
-            <div className="p-4 border-b border-white/10 bg-purple-500/5 flex justify-between items-center shrink-0">
+            <div className="p-4 border-b border-slate-300 bg-purple-500/5 flex justify-between items-center shrink-0">
               <div className="flex items-center gap-2">
                 <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
                 <span className="font-bold text-purple-400">AI Tutor</span>
@@ -231,7 +231,7 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
                       <button
                         key={q}
                         onClick={() => { setInputMsg(q); }}
-                        className="w-full text-left text-xs p-2 rounded-lg border border-white/5 hover:border-purple-500/30 hover:bg-purple-500/5 transition-colors text-slate-400"
+                        className="w-full text-left text-xs p-2 rounded-lg border border-slate-200 hover:border-purple-500/30 hover:bg-purple-500/5 transition-colors text-slate-500"
                       >
                         {q}
                       </button>
@@ -251,7 +251,7 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
                     "max-w-[85%] rounded-xl px-3 py-2 text-sm",
                     msg.role === "user"
                       ? "bg-blue-600/20 border border-blue-500/20 text-blue-100"
-                      : "bg-white/5 border border-white/10 prose prose-invert prose-sm max-w-none"
+                      : "bg-white border border-slate-300 prose prose-invert prose-sm max-w-none"
                   )}>
                     {msg.role === "ai" ? (
                       <ReactMarkdown>{msg.content}</ReactMarkdown>
@@ -276,7 +276,7 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
             </ScrollArea>
 
             {/* Input */}
-            <div className="p-3 border-t border-white/10 bg-black/50 shrink-0">
+            <div className="p-3 border-t border-slate-300 bg-slate-50 shrink-0">
               <form
                 onSubmit={e => { e.preventDefault(); sendMessage() }}
                 className="flex gap-2"
@@ -286,7 +286,7 @@ export function CoursePlayer({ lesson, onComplete, onNext, onPrev }: CoursePlaye
                   placeholder="Ask about this lesson..." 
                   value={inputMsg}
                   onChange={e => setInputMsg(e.target.value)}
-                  className="flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-purple-500/50 transition-colors"
+                  className="flex-1 bg-white border border-slate-300 rounded-lg px-3 py-2 text-sm text-slate-900 focus:outline-none focus:border-purple-500/50 transition-colors"
                 />
                 <Button type="submit" size="icon" disabled={isSending || !inputMsg.trim()} className="bg-purple-600 hover:bg-purple-500 shrink-0 h-9 w-9">
                   <Send className="w-3.5 h-3.5" />
